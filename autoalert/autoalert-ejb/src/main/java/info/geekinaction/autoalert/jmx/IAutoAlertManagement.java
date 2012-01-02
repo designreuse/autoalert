@@ -3,7 +3,7 @@
  */
 package info.geekinaction.autoalert.jmx;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.management.MXBean;
 
@@ -40,20 +40,20 @@ public interface IAutoAlertManagement {
 	 * Returns the list of instrumented EJB methods.
 	 * @return Returns the list or null if an error occurred.
 	 */
-	public List<String> getEJBMethods();
+	public Set<String> getEJBMethods();
 	
 	/**
 	 * Returns the number of calls to the specified EJB method.
 	 * @param methodName Name of the method.
 	 * @return Call count or null on error.
 	 */
-	public Integer getCallCountForMethod(String methodName);
+	public int getCallCountForMethod(String methodName);
 	
 	/**
 	 * Returns the average runtime of the specified EJB method.
 	 * @param methodName Name of the method.
 	 * @return Average runtime in milliseconds or null on error.
 	 */
-	public Long getRuntimeStatForMethod(String methodName);
+	public double getRuntimeStatForMethod(String methodName);
 	
 }

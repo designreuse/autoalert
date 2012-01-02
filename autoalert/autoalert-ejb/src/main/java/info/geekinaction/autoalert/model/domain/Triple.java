@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.khb.eprogram.imp.dto;
+package info.geekinaction.autoalert.model.domain;
 
 /**
  * @author lcsontos

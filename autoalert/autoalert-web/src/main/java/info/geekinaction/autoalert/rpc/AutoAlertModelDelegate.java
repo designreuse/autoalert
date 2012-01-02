@@ -182,6 +182,9 @@ public final class AutoAlertModelDelegate extends RemoteServiceServlet implement
 		}
 		return retval;
 	}
+	
+	@Override
+	public void reloadConfiguration() { }
 
 	/**
 	 * 

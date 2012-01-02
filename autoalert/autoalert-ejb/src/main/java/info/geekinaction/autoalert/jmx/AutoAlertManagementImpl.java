@@ -3,18 +3,21 @@
  */
 package info.geekinaction.autoalert.jmx;
 
+import static info.geekinaction.autoalert.common.CommonConstants.ISO_TIMESTAMP_FORMAT;
 import static info.geekinaction.autoalert.ejb.EJBConstants.AUTOALERT_MODEL_JNDI;
+
 import info.geekinaction.autoalert.common.util.CachingServiceLocator;
+import info.geekinaction.autoalert.common.util.DateUtil;
+import info.geekinaction.autoalert.model.domain.Pair;
 import info.geekinaction.autoalert.model.service.IAutoAlertModel;
 
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;
@@ -31,34 +34,36 @@ public class AutoAlertManagementImpl implements IAutoAlertManagement, MBeanRegis
 	private static final Logger logger = Logger.getLogger(AutoAlertManagementImpl.class);
 
 	// Call counters.
-	private final Map<String, AtomicInteger> ejbCallCounterMap;
+	private final Map<String, Integer> ejbCallCounterMap;
 	
 	// Counters of runtime statistics.
-	private final Map<String, AtomicLong> ejbRuntimeStatsMap;
+	private final Map<String, Double> ejbRuntimeStatsMap;
 
 	// Incoming runtime statistics.
-	private final Queue<Object> statisticsQueue;
+	private final Queue<RuntimeInfo> statisticsQueue;
 
-	// Local EJB proxy.
-	private final IAutoAlertModel model;
-	
 	// Thread for updating runtime statistics.
 	private final Thread statisticsUpdaterThread;
 	
 	// Indicates if the updater thread should be stopped.
 	private volatile boolean stopStatisticsUpdaterThread = false;
-	
+
+	// Local EJB proxy.
+	private IAutoAlertModel model;
+
 	// This is my ObjectName.
 	private ObjectName name;
+	
+	// Uptime.
+	private String uptime;
 	
 	/**
 	 * 
 	 */
 	public AutoAlertManagementImpl() {
-		ejbCallCounterMap = new HashMap<String, AtomicInteger>();
-		ejbRuntimeStatsMap = new HashMap<String, AtomicLong>();
-		statisticsQueue = new ConcurrentLinkedQueue<Object>();
-		model = CachingServiceLocator.lookupStatelessEJB(AUTOALERT_MODEL_JNDI, IAutoAlertModel.class);
+		ejbCallCounterMap = new HashMap<String, Integer>();
+		ejbRuntimeStatsMap = new HashMap<String, Double>();
+		statisticsQueue = new ConcurrentLinkedQueue<RuntimeInfo>();
 		statisticsUpdaterThread = this.new StatisticsUpdaterThread();
 	}
 
@@ -68,41 +73,69 @@ public class AutoAlertManagementImpl implements IAutoAlertManagement, MBeanRegis
 	@Override
 	public boolean reloadConfiguration() {
 		try {
-			System.out.println("MODEL: " + model);
+			model.reloadConfiguration();
+			logger.info("Configuration reloaded successfully.");
 			return true;
 		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 			return false;
 		}
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public String getUptime() {
-		// TODO Auto-generated method stub
-		return null;
+		return uptime;
 	}
 	
+	/**
+	 * 
+	 */
 	@Override
 	public void instrumentMethod(String methodName, long elapsedTime) {
-	// TODO
-		
+		RuntimeInfo runtimeInfo = new RuntimeInfo(methodName, elapsedTime);
+		statisticsQueue.add(runtimeInfo);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	@Override
-	public List<String> getEJBMethods() {
-		// TODO Auto-generated method stub
-		return null;
+	public synchronized Set<String> getEJBMethods() {
+		updateStatistics();
+		return Collections.unmodifiableSet(ejbCallCounterMap.keySet());
 	}
 
+	/**
+	 * 
+	 * @param methodName
+	 * @return
+	 */
 	@Override
-	public Integer getCallCountForMethod(String methodName) {
-		// TODO Auto-generated method stub
-		return null;
+	public int getCallCountForMethod(String methodName) {
+		updateStatistics();
+		return ejbCallCounterMap.get(methodName);
 	}
 
+	/**
+	 * 
+	 * @param methodName
+	 * @return
+	 */
 	@Override
-	public Long getRuntimeStatForMethod(String methodName) {
-		// TODO Auto-generated method stub
-		return null;
+	public double getRuntimeStatForMethod(String methodName) {
+		updateStatistics();
+		return ejbRuntimeStatsMap.get(methodName);
+	}
+	
+	private IAutoAlertModel getAutoAlertModel() {
+		if (model == null) {
+			model = CachingServiceLocator.lookupStatelessEJB(AUTOALERT_MODEL_JNDI, IAutoAlertModel.class);
+		}
+		return model;
 	}
 	
 	/**
@@ -111,12 +144,55 @@ public class AutoAlertManagementImpl implements IAutoAlertManagement, MBeanRegis
 	private boolean updateStatistics() {
 		boolean updated = false;
 		while (!statisticsQueue.isEmpty()) {
+			RuntimeInfo runtimeInfo = statisticsQueue.remove();
+			
 			synchronized (this) {
 				updated = true;
-				// TODO
+				
+				String methodName = runtimeInfo.getMethodName();
+				Long elapsedTime = runtimeInfo.getElapsedTime();
+				int currentCount = ejbCallCounterMap.containsKey(methodName) ? ejbCallCounterMap.get(methodName) : 0;
+				double currentElapsedTime = ejbRuntimeStatsMap.containsKey(methodName) ? ejbRuntimeStatsMap.get(methodName) : 0d;
+				
+				int newCount = currentCount + 1;
+				double newElapsedTime = ((currentElapsedTime * currentCount) + elapsedTime.doubleValue()) / newCount;
+				
+				ejbCallCounterMap.put(methodName, newCount);
+				ejbRuntimeStatsMap.put(methodName, newElapsedTime);
 			}
+			
 		}
 		return updated;
+	}
+	
+	/**
+	 * 
+	 * @author lcsontos
+	 *
+	 */
+	private static class RuntimeInfo extends Pair<String, Long> {
+		
+		public RuntimeInfo(String methodName, Long elapsedTime) {
+			setMethodName(methodName);
+			setElapsedTime(elapsedTime);
+		}
+		
+		public void setMethodName(String methodName) {
+			setPart1(methodName);
+		}
+		
+		public String getMethodName() {
+			return getPart1();
+		}
+		
+		public void setElapsedTime(Long elapsedTime) {
+			setPart2(elapsedTime);
+		}
+		
+		public Long getElapsedTime() {
+			return getPart2();
+		}
+		
 	}
 	
 	/**
@@ -157,6 +233,8 @@ public class AutoAlertManagementImpl implements IAutoAlertManagement, MBeanRegis
 		try {
 			if (registrationDone) {
 				statisticsUpdaterThread.start();
+				Date _uptime = DateUtil.currentTime();
+				uptime = DateUtil.toChar(_uptime, ISO_TIMESTAMP_FORMAT);
 			} else {
 				throw new IllegalStateException("MBean server returned with error, see log for details.");
 			}

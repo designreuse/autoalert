@@ -225,8 +225,7 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 	 */
 	public List<SessionIoUsage> findSessionIoUsage() {
 		Query query = createQuery(FIND_SESSION_IO_USAGE);
-		List<SessionIoUsage> retval = (List<SessionIoUsage>) query
-				.getResultList();
+		List<SessionIoUsage> retval = (List<SessionIoUsage>) query.getResultList();
 		return retval;
 	}
 
@@ -241,6 +240,12 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 
 		List<Tablespace> retval = (List<Tablespace>) query.getResultList();
 		return retval;
+	}
+	
+	@Override
+	public void reloadConfiguration() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	/**

@@ -41,7 +41,9 @@ public final class AutoAlertModelInterceptor {
 	 */
 	@AroundInvoke
 	public Object intercept(InvocationContext ctx) throws Exception {
-		System.out.println("*** DefaultInterceptor intercepting " + ctx.getMethod().getName());
+		String methodName = ctx.getMethod().getName();
+		logger.debug("Intercepting method call for " + methodName + " done.");
+		
 		try {
 			long before = System.currentTimeMillis();
 			
@@ -50,9 +52,11 @@ public final class AutoAlertModelInterceptor {
 			long after = System.currentTimeMillis();
 			long elapsed = after - before;
 			
+			mbeanProxy.instrumentMethod(methodName, elapsed);
+			
 			return retval;
 		} finally {
-			System.out.println("*** DefaultInterceptor exiting");
+			logger.debug("Intercepting method call for " + methodName + " done.");
 		}
 
 	}

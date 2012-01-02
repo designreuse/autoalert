@@ -16,8 +16,8 @@
 
 	<properties>
 		<glassfish.home>D:/devtools/Glassfish-3.0.1/glassfish</glassfish.home>
-		<domain.username>admin</domain.username>
 		<glassfish.domain>domain2</glassfish.domain>
+		<domain.username>admin</domain.username>
 	</properties>
 
 	<dependencies>

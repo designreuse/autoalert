@@ -84,7 +84,12 @@ public interface IAutoAlertModel extends RemoteService {
 	 * 
 	 * @return
 	 */
-	List<SessionIoUsage> findSessionIoUsage() throws AutoAlertException;;
+	List<SessionIoUsage> findSessionIoUsage() throws AutoAlertException;
+	
+	/**
+	 * 
+	 */
+	void reloadConfiguration();
 	
 	/**
 	 * 
