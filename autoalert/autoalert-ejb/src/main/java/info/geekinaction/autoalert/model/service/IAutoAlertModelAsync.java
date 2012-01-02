@@ -88,6 +88,12 @@ public interface IAutoAlertModelAsync {
 	 * @param callback
 	 */
 	void findSessionIoUsage(AsyncCallback<List<SessionIoUsage>> callback);
+	
+	/**
+	 * 
+	 * @param callback
+	 */
+	void reloadConfiguration(AsyncCallback<Void> callback);
 
 	/**
 	 * 

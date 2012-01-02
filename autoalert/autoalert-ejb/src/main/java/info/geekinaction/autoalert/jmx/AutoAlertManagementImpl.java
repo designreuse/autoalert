@@ -200,7 +200,7 @@ public class AutoAlertManagementImpl implements IAutoAlertManagement, MBeanRegis
 	 * @author lcsontos
 	 *
 	 */
-	private final class StatisticsUpdaterThread extends Thread {
+	private class StatisticsUpdaterThread extends Thread {
 		@Override
 		public void run() {
 			do {

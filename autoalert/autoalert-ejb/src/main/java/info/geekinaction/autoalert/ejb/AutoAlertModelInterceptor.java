@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
  * @author lcsontos
  * 
  */
-public final class AutoAlertModelInterceptor {
+public class AutoAlertModelInterceptor {
 	
 	private static final Logger logger = Logger.getLogger(AutoAlertModelInterceptor.class); 
 	

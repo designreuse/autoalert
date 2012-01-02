@@ -14,12 +14,6 @@
 
 	<name>Autoalert EAR module</name>
 
-	<properties>
-		<glassfish.home>D:/devtools/Glassfish-3.0.1/glassfish</glassfish.home>
-		<glassfish.domain>domain2</glassfish.domain>
-		<domain.username>admin</domain.username>
-	</properties>
-
 	<dependencies>
 
 		<!-- Depend on the ejb module and war so that we can package them -->
