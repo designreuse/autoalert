@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Class-Path: AutoAlertEJB.jar 
+ lib/gwt-servlet.jar 
+ lib/gwt-user.jar
+

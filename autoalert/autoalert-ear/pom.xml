@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<artifactId>autoalert</artifactId>
+		<groupId>info.geekinaction</groupId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>autoalert-ear</artifactId>
+	<packaging>ear</packaging>
+
+	<name>Autoalert EAR module</name>
+
+	<properties>
+		<glassfish.home>D:/devtools/Glassfish-3.0.1/glassfish</glassfish.home>
+		<domain.username>admin</domain.username>
+		<glassfish.domain>domain2</glassfish.domain>
+	</properties>
+
+	<dependencies>
+
+		<!-- Depend on the ejb module and war so that we can package them -->
+		<dependency>
+			<groupId>info.geekinaction</groupId>
+			<artifactId>autoalert-web</artifactId>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>info.geekinaction</groupId>
+			<artifactId>autoalert-ejb</artifactId>
+			<type>ejb</type>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>autoalert</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ear-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<!-- Tell Maven we are using Java EE 5 -->
+					<version>5</version>
+					<!-- Use Java EE ear libraries as needed. Java EE ear libraries are 
+						in easy way to package any libraries needed in the ear, and automatically 
+						have any modules (EJB-JARs and WARs) use them -->
+					<defaultLibBundleDir>lib</defaultLibBundleDir>
+					<modules>
+						<!-- Register our War as a web module, and set the context root -->
+						<webModule>
+							<groupId>info.geekinaction</groupId>
+							<artifactId>autoalert-web</artifactId>
+							<!-- Define the context root for the webapp -->
+							<contextRoot>/autoalert</contextRoot>
+						</webModule>
+					</modules>
+				</configuration>
+			</plugin>
+			<!-- The JBoss AS plugin deploys your ear to a local JBoss AS container -->
+			<!-- Due to Maven's lack of intelligence with EARs we need to configure 
+				the jboss-as maven plugin to skip deployment for all modules. We then enable 
+				it specifically in the ear module. <plugin> <groupId>org.jboss.as.plugins</groupId> 
+				<artifactId>jboss-as-maven-plugin</artifactId> <configuration> <skip>false</skip> 
+				</configuration> </plugin> -->
+				
+			<plugin>
+				<groupId>org.glassfish.maven.plugin</groupId>
+				<artifactId>maven-glassfish-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<glassfishDirectory>${glassfish.home}</glassfishDirectory>
+					<user>${domain.username}</user>
+					<passwordFile>${glassfish.home}/domains/${glassfish.domain}/master-password</passwordFile>
+					<debug>true</debug>
+					<echo>true</echo>
+					<domain>
+						<name>${glassfish.domain}</name>
+						<adminPort>4848</adminPort> 
+					</domain>
+					<components>
+						<component>
+							<name>${project.artifactId}</name>
+							<artifact>${project.build.directory}/${project.build.finalName}.ear</artifact>
+						</component>
+					</components>
+				</configuration>
+			</plugin>
+			
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-ear-plugin
+										</artifactId>
+										<versionRange>
+											[2.6,)
+										</versionRange>
+										<goals>
+											<goal>
+												generate-application-xml
+											</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+</project>

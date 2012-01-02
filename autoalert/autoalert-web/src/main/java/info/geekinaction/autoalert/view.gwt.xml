@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 1.7.1//EN" "http://google-web-toolkit.googlecode.com/svn/tags/1.7.1/distro-source/core/src/gwt-module.dtd">
+<module rename-to="autoalert">
+
+	<!-- Import built-in modules -->
+	<inherits name="com.google.gwt.user.User" />
+	<inherits name="com.google.gwt.user.theme.dark.Dark" />
+
+	<!-- Import custom modules -->
+	<inherits name="info.geekinaction.autoalert.model" />
+
+	<!-- Define sources to compile -->
+	<source path="view" />
+
+	<!-- Enable emulated exception stack -->
+	<set-property name="compiler.stackMode" value="emulated" />
+	<set-configuration-property name="compiler.emulatedStack.recordLineNumbers"	value="true" />
+	<set-configuration-property name="compiler.emulatedStack.recordFileNames" value="true" />
+
+	<!-- Define entry point of the application -->
+	<entry-point class="info.geekinaction.autoalert.view.ui.AutoAlertApp"></entry-point>
+	
+</module>

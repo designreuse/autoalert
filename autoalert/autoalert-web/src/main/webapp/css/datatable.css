@@ -1,0 +1,28 @@
+.DataTable {
+  border-width: 1px 0px 1px 1px;
+  border-style: solid;
+  border-color: #222222;
+  border-spacing: 0px;
+}
+
+.DataTable-OddRow {
+  background-color: #777777;
+}
+
+.DataTable-EvenRow {
+  background-color:  #999999;
+}
+
+
+.DataTable-FirstRow {
+  background-color: #222222; 
+  text-align: center;
+  font-weight: bold;
+}
+
+.DataTable-Cell {
+  border-width: 1px 1px 0px 0px;
+  border-style: solid;
+  border-color: #222222;
+  padding: 3px;
+}

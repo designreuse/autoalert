@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Class-Path: lib/gwt-servlet.jar 
+ lib/gwt-user.jar 
+ lib/commons-collections-3.2.1.jar 
+ lib/commons-lang-2.4.jar 
+ lib/velocity-1.6.3.jar
+

@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd"
+	version="1.0">
+
+	<!-- Query parameters of AutoAlert application -->
+	<named-query name="findParameters">
+		<query>SELECT OBJECT(p) FROM Parameter p</query>
+	</named-query>
+
+	<!-- Query info about RDBMS instance -->
+	<named-query name="findDatabase">
+		<query>SELECT OBJECT(db) FROM Database db
+	    </query>
+	</named-query>
+
+	<named-query name="findInstanceCpuUsage">
+		<query>
+			SELECT OBJECT(u)
+			FROM InstanceCpuUsage u
+			WHERE u.alert > ?1
+			AND u.lastSlice > ?2
+			ORDER BY u.beginTime DESC
+	    </query>
+	</named-query>
+
+	<named-query name="findInstanceIoUsage">
+		<query>
+			SELECT OBJECT(u)
+			FROM InstanceIoUsage u
+			WHERE u.alert > ?1
+			AND u.lastSlice > ?2
+			ORDER BY u.beginTime DESC
+	    </query>
+	</named-query>
+
+	<!-- Query info about tablespaces/datafiles -->
+	<named-query name="findTablespaces">
+		<query>
+			SELECT OBJECT(ts)
+			FROM Tablespace ts
+			WHERE ts.alert > ?1
+			ORDER BY ts.sizeRemainPer 
+		</query>
+	</named-query>
+
+	<named-query name="findDatafiles">
+		<query>
+			SELECT OBJECT(df)
+			FROM Datafile df
+			WHERE df.alert > ?1
+			ORDER BY df.sizeRemainPer
+		</query>
+	</named-query>
+
+	<!-- Query info about sessions -->
+	<named-query name="findSession">
+		<query>SELECT OBJECT(s) FROM Session s
+		</query>
+	</named-query>
+
+	<named-query name="findSessionCpuUsage">
+		<query>SELECT OBJECT(s) FROM SessionCpuUsage s ORDER BY s.value DESC</query>
+	</named-query>
+
+	<named-query name="findSessionIoUsage">
+		<query>SELECT OBJECT(s)	FROM SessionIoUsage s ORDER BY s.value DESC</query>
+	</named-query>
+
+	<mapped-superclass class="info.geekinaction.autoalert.model.domain.AbstractAlertable" access="PROPERTY">
+		<attributes>
+			<basic name="threshold" />
+			<basic name="alert" />
+		</attributes>
+	</mapped-superclass>
+
+	<mapped-superclass class="info.geekinaction.autoalert.model.domain.AbstractInstanceResourceUsage" access="PROPERTY">
+		<attributes>
+			<id name="id">
+			</id>
+			<basic name="lastSlice">
+				<column name="LAST_SLICE" />
+			</basic>
+			<basic name="timeSlice">
+				<column name="TIME_SLICE" />
+			</basic>
+			<basic name="sliceCount">
+				<column name="SLICE_COUNT" />
+			</basic>
+			<basic name="beginTime">
+				<column name="BEGIN_TIME" />
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="endTime">
+				<column name="END_TIME" />
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="value">
+				<column name="VALUE" />
+			</basic>
+		</attributes>
+	</mapped-superclass>
+
+	<mapped-superclass class="info.geekinaction.autoalert.model.domain.AbstractStorage" access="PROPERTY">
+		<attributes>
+			<basic name="freeMb">
+				<column name="FREE_MB" />
+			</basic>
+			<basic name="sizeMaxMb">
+				<column name="SIZE_MAX_MB" />
+			</basic>
+			<basic name="sizeMb">
+				<column name="SIZE_MB" />
+			</basic>
+			<basic name="sizeRemainMb">
+				<column name="SIZE_REMAIN_MB" />
+			</basic>
+			<basic name="sizeRemainPer">
+				<column name="SIZE_REMAIN_PER" />
+			</basic>
+			<basic name="tablespaceName">
+				<column name="TABLESPACE_NAME" insertable="false" updatable="false" />
+			</basic>
+			<basic name="usedMb">
+				<column name="USED_MB" />
+			</basic>
+			<basic name="usedPer">
+				<column name="USED_PER" />
+			</basic>
+		</attributes>
+	</mapped-superclass>
+	
+	<mapped-superclass class="info.geekinaction.autoalert.model.domain.AbstractSession" access="PROPERTY">
+		<attributes>
+			<id name="sid">
+				<column name="SID"/>
+			</id>
+			<basic name="logonTime">
+				<column name="LOGON_TIME" />
+			</basic>
+			<basic name="machine">
+				<column name="MACHINE" />
+			</basic>
+			<basic name="module">
+				<column name="MODULE" />
+			</basic>
+			<basic name="program">
+				<column name="PROGRAM" />
+			</basic>
+			<basic name="serial">
+				<column name="SERIAL" />
+			</basic>
+			<basic name="spid">
+				<column name="SPID" />
+			</basic>
+			<basic name="sqlText">
+				<column name="SQL_TEXT" />
+			</basic>
+			<basic name="terminal">
+				<column name="TERMINAL" />
+			</basic>
+			<basic name="username">
+				<column name="USERNAME" />
+			</basic>
+		</attributes>
+	</mapped-superclass>
+	
+	<mapped-superclass class="info.geekinaction.autoalert.model.domain.AbstractSessionResourceUsage" access="PROPERTY">
+		<attributes>
+			<basic name="value">
+				<column name="VALUE"/>
+			</basic>
+		</attributes>
+	</mapped-superclass>
+	
+	<entity class="info.geekinaction.autoalert.model.domain.InstanceCpuUsage" access="PROPERTY">
+		<table name="VW_AA_CPU_USAGE_INSTANCE" />
+	</entity>
+	
+	<entity class="info.geekinaction.autoalert.model.domain.InstanceIoUsage" access="PROPERTY">
+		<table name="VW_AA_PIO_USAGE_INSTANCE" />
+	</entity>
+	
+	<entity class="info.geekinaction.autoalert.model.domain.Datafile" access="PROPERTY">
+		<table name="VW_AA_ALL_DATAFILES" />
+		<attributes>
+			<id name="fileName" >
+				<column name="FILE_NAME"/>
+			</id>
+			<basic name="autoext" />
+			<basic name="incrByMb">
+				<column name="INCR_BY_MB"/>
+			</basic>
+		</attributes>
+	</entity>
+
+	<entity class="info.geekinaction.autoalert.model.domain.Tablespace" access="PROPERTY">
+		<table name="VW_AA_ALL_TABLESPACES" />
+		<attributes>
+			<id name="tablespaceName">
+				<column name="TABLESPACE_NAME"/>
+			</id>
+		</attributes>
+	</entity>
+	
+	<entity class="info.geekinaction.autoalert.model.domain.Database" access="PROPERTY">
+		<table name="VW_AA_DATABASE"/>
+		<attributes>
+			<id name="dbid">
+				<column name="DBID"/>
+			</id>
+			<basic name="controlfileCreated">
+				<column name="CONTROLFILE_CREATED"/>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="controlfileType">
+				<column name="CONTROLFILE_TYPE"/>
+			</basic>
+			<basic name="created">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="currentScn">
+				<column name="CURRENT_SCN"/>
+			</basic>
+			<basic name="databaseRole">
+				<column name="DATABASE_ROLE"/>
+			</basic>
+			<basic name="dbUniqueName">
+				<column name="DB_UNIQUE_NAME"/>
+			</basic>
+			<basic name="flashbackOn">
+				<column name="FLASHBACK_ON"/>
+			</basic>
+			<basic name="logMode">
+				<column name="LOG_MODE"/>
+			</basic>
+			<basic name="name">
+				<column name="NAME"/>
+			</basic>
+			<basic name="openMode">
+				<column name="OPEN_MODE"/>
+			</basic>
+			<basic name="platformName">
+				<column name="PLATFORM_NAME"/>
+			</basic>
+			<basic name="resetlogsTime">
+				<column name="RESETLOGS_TIME"/>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+		</attributes>
+	</entity>
+	
+	<entity class="info.geekinaction.autoalert.model.domain.Parameter" access="PROPERTY">
+		<table name="AA_PARAMETERS" />
+		<attributes>
+			<id name="paramName">
+				<column name="PARAM_NAME"/>
+			</id>
+			<basic name="paramDesc">
+				<column name="PARAM_DESC"/>
+			</basic>
+			<basic name="paramNumValue">
+				<column name="PARAM_NUM_VALUE"/>
+			</basic>
+			<basic name="paramType">
+				<column name="PARAM_TYPE"/>
+			</basic>
+			<basic name="paramVcharValue">
+				<column name="PARAM_VCHAR_VALUE"/>
+			</basic>
+		</attributes>
+	</entity>
+	
+	<entity class="info.geekinaction.autoalert.model.domain.Session" access="PROPERTY">
+		<table name="VW_AA_ALL_SESSIONS" />
+		<attributes>
+			<basic name="status" />
+			<basic name="type" />
+		</attributes>
+	</entity>
+
+	<entity class="info.geekinaction.autoalert.model.domain.SessionCpuUsage" access="PROPERTY">
+		<table name="VW_AA_CPU_USAGE_SESSIONS" />
+	</entity>
+		
+	<entity class="info.geekinaction.autoalert.model.domain.SessionIoUsage" access="PROPERTY">
+		<table name="VW_AA_PIO_USAGE_SESSIONS" />
+	</entity>
+
+</entity-mappings>

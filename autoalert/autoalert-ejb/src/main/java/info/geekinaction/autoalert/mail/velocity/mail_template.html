@@ -1,0 +1,127 @@
+<html>
+
+	<body>
+	
+		<!-- General informations about the current Oracle instance -->
+		<h1>Informations about database instance</h1>
+		
+		<table border="1">
+			<tr><th align="left">Database ID</th><td>$database.dbid</td></tr>
+			<tr><th align="left">SID Name</th><td>$database.name</td></tr>
+			<tr><th align="left">Platform</th><td>$database.platformName</td></tr>
+			<tr><th align="left">Log Mode</th><td>$database.logMode</td></tr>
+			<tr><th align="left">Open Mode</th><td>$database.openMode</td></tr>
+		</table>
+		
+		<hr>
+		
+		<!-- Threshold violations -->
+		<h1>Threshold violations</h1>
+		
+		#if( $tablespaces.size() > 0 )
+		
+		<!-- Violations related to database storage -->
+		<h2>Storage</h2>
+
+		<!-- Tablespaces which will be running out of space -->
+		<h3>Tablespaces</h3>
+		
+		<table border="1">
+			<tr>
+				<th>Tablespace name</th>
+				<th>Max Size [Mb]</th>
+				<th>Size [Mb]</th>
+				<th>Used [Mb]</th>
+				<th>Free [Mb]</th>
+				<th>Size remain [Mb]</th>
+				<th>Used [%]</th>
+				<th>Used threshold [%]</th>
+				<th>Size remain [%]</th>
+			</tr>
+			#foreach( $tbs in $tablespaces )
+			<tr>
+				<td>$tbs.tablespaceName</td>
+				<td>$tbs.sizeMaxMb</td>
+				<td>$tbs.sizeMb</td>
+				<td>$tbs.usedMb</td>
+				<td>$tbs.freeMb</td>
+				<td>$tbs.sizeRemainMb</td>
+				<td>$tbs.usedPer</td>
+				<td>$tbs.threshold</td>				
+				<td>$tbs.sizeRemainPer</td>				
+			<tr>
+			#end 
+		</table>
+
+		<!-- Detailed list about tablespaces -->
+		<h3>Data files</h3>
+		
+		<table border="1">
+			<tr>
+				<th>Tablespace name</th>
+				<th>File name</th>
+				<th>Auto extent</th>
+				<th>Increment by</th>
+				<th>Max Size [Mb]</th>
+				<th>Size [Mb]</th>
+				<th>Used [Mb]</th>
+				<th>Free [Mb]</th>
+				<th>Size remain [Mb]</th>
+				<th>Used [%]</th>
+				<th>Used threshold [%]</th>
+				<th>Size remain [%]</th>
+			</tr>
+			#foreach( $dbf in $datafiles )
+			<tr>
+				<td>$dbf.tablespaceName</td>
+				<td>$dbf.fileName</td>
+				<td>$dbf.autoext</td>
+				<td>$dbf.incrByMb</td>
+				<td>$dbf.sizeMaxMb</td>
+				<td>$dbf.sizeMb</td>
+				<td>$dbf.usedMb</td>
+				<td>$dbf.freeMb</td>
+				<td>$dbf.sizeRemainMb</td>
+				<td>$dbf.usedPer</td>
+				<td>$dbf.threshold</td>				
+				<td>$dbf.sizeRemainPer</td>				
+			<tr>
+			#end 
+		</table>
+		
+		#end
+		
+		#if ( $cpu_usage || $io_usage )
+		<!-- Resource usage violations -->
+		<h2>Resource usage</h2>
+		
+		<!-- CPU usage aggregated for the last five minutes -->
+		#if ( $cpu_usage )
+		<h3>CPU usage</h3>
+		
+		<table border="1">
+			<tr><th align="left">Measue begin time</th><td>$cpu_usage.beginTime</td></tr>
+			<tr><th align="left">Measue end time</th><td>$cpu_usage.endTime</td></tr>
+			<tr><th align="left">CPU Usage [%] Threshold</th><td>$cpu_usage.threshold</td></tr>
+			<tr><th align="left">CPU Usage [%]</th><td>$cpu_usage.value</td></tr>
+		</table>
+		#end
+		
+		<!-- IO usage aggregated for the last five minutes -->
+		#if ( $io_usage )
+		<h3>IO usage</h3>
+
+		<table border="1">
+			<tr><th align="left">Measue begin time</th><td>$io_usage.beginTime</td></tr>
+			<tr><th align="left">Measue end time</th><td>$io_usage.endTime</td></tr>
+			<tr><th align="left">IO Operations Threshold</th><td>$io_usage.threshold</td></tr>
+			<tr><th align="left">IO Operations</th><td>$io_usage.value</td></tr>
+		</table>
+		#end
+		#end
+		
+		<hr>
+
+	</body>
+	
+</html>
