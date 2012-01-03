@@ -1,0 +1,15 @@
+create table AA_PARAMETERS
+(
+  PARAM_NAME        VARCHAR2(100) not null,
+  PARAM_DESC        VARCHAR2(250) not null,
+  PARAM_TYPE        CHAR(1) not null,
+  PARAM_NUM_VALUE   NUMBER,
+  PARAM_VCHAR_VALUE VARCHAR2(100),
+  constraint AA_PARAMETERS_PK primary key (PARAM_NAME)
+)
+organization index;
+
+alter table AA_PARAMETERS
+  add constraint AA_PARAMETERS_CK1
+  check (PARAM_NUM_VALUE is not null or PARAM_VCHAR_VALUE is not null);
+

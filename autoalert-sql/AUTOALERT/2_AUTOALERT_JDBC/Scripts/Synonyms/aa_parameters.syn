@@ -1,0 +1,2 @@
+create synonym AA_PARAMETERS for AUTOALERT.AA_PARAMETERS;
+

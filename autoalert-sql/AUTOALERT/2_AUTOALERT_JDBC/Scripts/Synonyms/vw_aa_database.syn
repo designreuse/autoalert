@@ -1,0 +1,2 @@
+create synonym vw_aa_database for AUTOALERT.vw_aa_database;
+

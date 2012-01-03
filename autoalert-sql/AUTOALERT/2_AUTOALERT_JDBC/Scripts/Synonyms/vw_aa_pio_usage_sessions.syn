@@ -1,0 +1,2 @@
+create synonym vw_aa_pio_usage_sessions for AUTOALERT.vw_aa_pio_usage_sessions;
+

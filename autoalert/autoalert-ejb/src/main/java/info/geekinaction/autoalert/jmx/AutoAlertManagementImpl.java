@@ -143,8 +143,13 @@ public class AutoAlertManagementImpl implements IAutoAlertManagement, MBeanRegis
 	 */
 	private boolean updateStatistics() {
 		boolean updated = false;
+		
 		while (!statisticsQueue.isEmpty()) {
-			RuntimeInfo runtimeInfo = statisticsQueue.remove();
+			
+			RuntimeInfo runtimeInfo = statisticsQueue.poll();
+			if (runtimeInfo == null) {
+				break;
+			}
 			
 			synchronized (this) {
 				updated = true;
@@ -162,6 +167,7 @@ public class AutoAlertManagementImpl implements IAutoAlertManagement, MBeanRegis
 			}
 			
 		}
+		
 		return updated;
 	}
 	

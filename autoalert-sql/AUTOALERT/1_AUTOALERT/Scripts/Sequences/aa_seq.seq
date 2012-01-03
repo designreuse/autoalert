@@ -1,0 +1,7 @@
+create sequence AA_SEQ
+minvalue 1000000
+maxvalue 999999999999999999999999999
+start with 1000000
+increment by 1
+cache 20;
+

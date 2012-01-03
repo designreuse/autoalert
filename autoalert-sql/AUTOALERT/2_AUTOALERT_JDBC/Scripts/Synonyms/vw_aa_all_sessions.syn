@@ -1,0 +1,2 @@
+create synonym vw_aa_all_sessions for AUTOALERT.VW_AA_ALL_SESSIONS;
+

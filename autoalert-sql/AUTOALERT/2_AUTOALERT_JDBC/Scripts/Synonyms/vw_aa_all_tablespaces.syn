@@ -1,0 +1,2 @@
+create synonym vw_aa_all_tablespaces for AUTOALERT.vw_aa_all_tablespaces;
+
