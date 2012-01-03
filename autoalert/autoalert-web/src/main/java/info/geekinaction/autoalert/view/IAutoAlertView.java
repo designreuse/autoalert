@@ -3,7 +3,6 @@
  */
 package info.geekinaction.autoalert.view;
 
-
 /**
  * @author lcsontos
  *
@@ -17,22 +16,23 @@ public interface IAutoAlertView {
 	 * 
 	 * @param controller
 	 */
-	void addActionListener(IAutoAlertController controller);
+	public void addActionListener(IAutoAlertController controller);
 	
 	/**
 	 * 
 	 * @param obj
 	 */
-	void showDisplay(AutoAlertDisplay display, Object data);
+	public void showDisplay(AutoAlertDisplay display, Object data);
 	
 	/**
 	 * 
 	 * @param t
 	 */
-	void showError(Throwable t);
+	public void showError(Throwable t);
 	
 	/**
 	 * 
 	 */
-	void init();
+	public void init();
+	
 }

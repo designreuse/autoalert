@@ -15,29 +15,29 @@ public interface IAutoAlertPanel<T> {
 	 * 
 	 * @param controller
 	 */
-    void registerController(IAutoAlertController controller);
+	public void registerController(IAutoAlertController controller);
     
     /**
      * 
      * @param obj
      */
-    void display(AutoAlertDisplay display, T obj);
+	public void display(AutoAlertDisplay display, T obj);
     
     /**
      * 
      */
-    void refresh();
-    
-    /**
-     * 
-     * @return
-     */
-    Panel getPanel();
+	public void refresh();
     
     /**
      * 
      * @return
      */
-    AutoAlertMessages getMessages();
+	public Panel getPanel();
+    
+    /**
+     * 
+     * @return
+     */
+	public AutoAlertMessages getMessages();
     
 }

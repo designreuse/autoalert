@@ -15,7 +15,7 @@ public interface DataTableModel<T> {
 	 * 
 	 * @param title
 	 */
-	void addTitle(String title);
+	public void addTitle(String title);
 
 	/**
 	 * 
@@ -27,31 +27,31 @@ public interface DataTableModel<T> {
 	 * 
 	 * @return
 	 */
-	List<String> getTitles();
+	public List<String> getTitles();
 	
 	/**
 	 * 
 	 * @param obj
 	 */
-	void setData(List<T> obj);
+	public void setData(List<T> obj);
 	
 	/**
 	 * 
 	 * @return
 	 */
-	List<T> getData();
+	public List<T> getData();
 	
 	/**
 	 * 
 	 * @return
 	 */
-	int getRowNum();
+	public int getRowNum();
 	
 	/**
 	 * 
 	 * @return
 	 */
-	int getColumnNum();
+	public int getColumnNum();
 	
 	/**
 	 * 
@@ -59,6 +59,6 @@ public interface DataTableModel<T> {
 	 * @param column
 	 * @return
 	 */
-	Object getObject(int row, int column);
+	public Object getObject(int row, int column);
 
 }
