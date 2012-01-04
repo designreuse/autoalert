@@ -38,6 +38,6 @@ public interface IAutoAlertPanel<T> {
      * 
      * @return
      */
-	public AutoAlertMessages getMessages();
+	// public AutoAlertMessages getMessages();
     
 }

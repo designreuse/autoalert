@@ -3,6 +3,10 @@
  */
 package info.geekinaction.autoalert.view;
 
+import static info.geekinaction.autoalert.view.ViewConstants.MESSAGES;
+import static info.geekinaction.autoalert.view.ViewConstants.WIDTH;
+import static info.geekinaction.autoalert.view.ViewConstants.HEIGHT;
+
 import info.geekinaction.autoalert.model.domain.Datafile;
 import info.geekinaction.autoalert.model.domain.Tablespace;
 import info.geekinaction.autoalert.model.service.IAutoAlertModelAsync;
@@ -84,9 +88,9 @@ public class AutoAlertViewImpl extends AbstractAutoAlertPanel implements IAutoAl
 		storageStatusPanel = new StorageStatusPanel();
 		sessionStatusPanel = new SessionStatusPanel();
 
-		mainTabPanel.add(instanceStatusPanel, getMessages().instance());
-		mainTabPanel.add(storageStatusPanel, getMessages().storage());
-		mainTabPanel.add(sessionStatusPanel, getMessages().sessions());
+		mainTabPanel.add(instanceStatusPanel, MESSAGES.instance());
+		mainTabPanel.add(storageStatusPanel, MESSAGES.storage());
+		mainTabPanel.add(sessionStatusPanel, MESSAGES.sessions());
 		mainTabPanel.selectTab(0);
 
 		add(mainTabPanel);

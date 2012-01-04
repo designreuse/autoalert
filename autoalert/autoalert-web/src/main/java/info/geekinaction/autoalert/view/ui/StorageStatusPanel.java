@@ -3,10 +3,11 @@
  */
 package info.geekinaction.autoalert.view.ui;
 
-import static info.geekinaction.autoalert.view.Constants.MESSAGES;
-import static info.geekinaction.autoalert.view.IAutoAlertView.HEIGHT;
-import static info.geekinaction.autoalert.view.IAutoAlertView.WIDTH;
-
+import static info.geekinaction.autoalert.view.FormatUtil.formatNumber;
+import static info.geekinaction.autoalert.view.ViewConstants.HEIGHT;
+import static info.geekinaction.autoalert.view.ViewConstants.IMG_URL_REFRESH;
+import static info.geekinaction.autoalert.view.ViewConstants.MESSAGES;
+import static info.geekinaction.autoalert.view.ViewConstants.WIDTH;
 import info.geekinaction.autoalert.model.domain.Datafile;
 import info.geekinaction.autoalert.model.domain.Tablespace;
 import info.geekinaction.autoalert.view.AbstractAutoAlertPanel;
@@ -19,9 +20,11 @@ import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.user.client.ui.Button;
+
+import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.DecoratedTabPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -51,7 +54,7 @@ public class StorageStatusPanel extends AbstractAutoAlertPanel {
 		spTablespaces.setHeight(HEIGHT);
 		spTablespaces.setWidth(WIDTH);
 		
-		Button btnRefreshTablespaces = new Button(MESSAGES.refresh());
+		ButtonBase btnRefreshTablespaces = new PushButton(new Image(IMG_URL_REFRESH));
 		btnRefreshTablespaces.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
 				controller.onStorageTablespacesRefresh();
@@ -59,6 +62,7 @@ public class StorageStatusPanel extends AbstractAutoAlertPanel {
 		});
 
 		VerticalPanel vpTablespaces = new VerticalPanel();
+		vpTablespaces.setSpacing(10);
 		vpTablespaces.add(btnRefreshTablespaces);
 		vpTablespaces.add(spTablespaces);
 
@@ -68,7 +72,7 @@ public class StorageStatusPanel extends AbstractAutoAlertPanel {
 		spDatafiles.setHeight(HEIGHT);
 		spDatafiles.setWidth(WIDTH);
 
-		Button btnRefreshDatafiles = new Button(MESSAGES.refresh());
+		ButtonBase btnRefreshDatafiles = new PushButton(new Image(IMG_URL_REFRESH));
 		btnRefreshDatafiles.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent arg0) {
 				controller.onStorageDatafilesRefresh();
@@ -76,36 +80,31 @@ public class StorageStatusPanel extends AbstractAutoAlertPanel {
 		});
 
 		VerticalPanel vpDatafiles = new VerticalPanel();
+		vpDatafiles.setSpacing(10);
 		vpDatafiles.add(btnRefreshDatafiles);
 		vpDatafiles.add(spDatafiles);
 
-		tabPanel.add(vpTablespaces, getMessages().tablespaces());
-		tabPanel.add(vpDatafiles, getMessages().datafiles());
+		tabPanel.add(vpTablespaces, MESSAGES.tablespaces());
+		tabPanel.add(vpDatafiles, MESSAGES.datafiles());
 		tabPanel.selectTab(0);
 
 		add(tabPanel);
 	}
 
 	public void display(AutoAlertDisplay display, List<?> obj) {
-		if (!(obj instanceof List))
-			return;
-
-		List list = (List) obj;
-		if (list == null || list.size() == 0)
-			return;
-
-		Object first = list.get(0);
-		if (first instanceof Tablespace) {
+		super.display(display, obj);
+		switch (display) {
+		case STORAGE_TABLESPACES:
 			List<Tablespace> tablespaces = (List<Tablespace>) obj;
-			TablespaceDataModel model = new TablespaceDataModel(tablespaces);
-			dtTablespaces.setModel(model);
-		} else if (first instanceof Datafile) {
+			TablespaceDataModel tablespaceDataModel = new TablespaceDataModel(tablespaces);
+			dtTablespaces.setModel(tablespaceDataModel);			
+			break;
+		case STORAGE_DATAFILES:
 			List<Datafile> datafiles = (List<Datafile>) obj;
 			DatafileDataModel model = new DatafileDataModel(datafiles);
 			dtDatafiles.setModel(model);
-		} else
-			return;
-
+			break;
+		}
 	}
 
 	/**
@@ -135,9 +134,7 @@ public class StorageStatusPanel extends AbstractAutoAlertPanel {
 		 * 
 		 */
 		@Override
-		protected void init() {
-			clear();
-
+		protected void processTitles() {
 			// Column titles
 			addTitle(MESSAGES.tablespaceName()); // 1
 			addTitle(MESSAGES.sizeMb()); // 2
@@ -147,29 +144,26 @@ public class StorageStatusPanel extends AbstractAutoAlertPanel {
 			addTitle(MESSAGES.sizeRemainMb()); // 6
 			addTitle(MESSAGES.sizeRemainPer()); // 7
 			addTitle(MESSAGES.alert()); // 8
-
-			// Data
-			for (Tablespace ts : data) {
+		}
+		
+		/**
+		 * 
+		 */
+		@Override
+		protected void processData() {
+			for (Tablespace rec : data) {
 				List<Object> record = new ArrayList<Object>();
 
-				record.add(ts.getTablespaceName());
-				record.add(format(ts.getSizeMb()));
-				record.add(format(ts.getUsedMb()));
-				record.add(format(ts.getUsedPer()));
-				record.add(format(ts.getFreeMb()));
-				record.add(format(ts.getSizeRemainMb()));
-				record.add(format(ts.getSizeRemainPer()));
-				record.add("X");
+				record.add(rec.getTablespaceName());
+				record.add(formatNumber(rec.getSizeMb()));
+				record.add(formatNumber(rec.getUsedMb()));
+				record.add(formatNumber(rec.getUsedPer()));
+				record.add(formatNumber(rec.getFreeMb()));
+				record.add(formatNumber(rec.getSizeRemainMb()));
+				record.add(formatNumber(rec.getSizeRemainPer()));
+				record.add(rec.getAlert());
 				cells.add(record);
 			}
-		}
-
-		//
-		private String format(Float number/* , NumberFormat format */) {
-			if (number == null) {
-				return null;
-			}
-			return NumberFormat.getDecimalFormat().format(number);
 		}
 
 	}
@@ -193,9 +187,35 @@ public class StorageStatusPanel extends AbstractAutoAlertPanel {
 		 * 
 		 */
 		@Override
-		protected void init() {
-			// TODO Auto-generated method stub
+		protected void processTitles() {
+			// Column titles
+			addTitle(MESSAGES.tablespaceName()); // 1
+			addTitle(MESSAGES.datafiles()); // 2
+			addTitle(MESSAGES.sizeMb()); // 3
+			addTitle(MESSAGES.usedMb()); // 4
+			addTitle(MESSAGES.usedPer()); // 5
+			addTitle(MESSAGES.freeMb()); // 6
+			addTitle(MESSAGES.sizeRemainMb()); // 7
+			addTitle(MESSAGES.sizeRemainPer()); // 8
+			addTitle(MESSAGES.alert()); // 9
+		}
+		
+		@Override
+		protected void processData() {
+			for (Datafile rec : data) {
+				List<Object> record = new ArrayList<Object>();
 
+				record.add(rec.getTablespaceName());
+				record.add(rec.getFileName());
+				record.add(formatNumber(rec.getSizeMb()));
+				record.add(formatNumber(rec.getUsedMb()));
+				record.add(formatNumber(rec.getUsedPer()));
+				record.add(formatNumber(rec.getFreeMb()));
+				record.add(formatNumber(rec.getSizeRemainMb()));
+				record.add(formatNumber(rec.getSizeRemainPer()));
+				record.add(rec.getAlert());
+				cells.add(record);
+			}		
 		}
 
 	}

@@ -3,6 +3,8 @@
  */
 package info.geekinaction.autoalert.view.ui;
 
+import static info.geekinaction.autoalert.view.ViewConstants.MAIN_DIV_ID;
+
 import info.geekinaction.autoalert.model.service.IAutoAlertModel;
 import info.geekinaction.autoalert.model.service.IAutoAlertModelAsync;
 import info.geekinaction.autoalert.view.AutoAlertControllerImpl;
@@ -21,7 +23,6 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public final class AutoAlertApp implements EntryPoint {
 
-	private static final String MAIN_DIV_ID = "MAIN";
 	/**
 	 * 
 	 */

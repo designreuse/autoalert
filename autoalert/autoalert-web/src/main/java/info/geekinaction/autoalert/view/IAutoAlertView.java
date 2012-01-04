@@ -8,9 +8,6 @@ package info.geekinaction.autoalert.view;
  *
  */
 public interface IAutoAlertView {
-	
-	public static final String WIDTH = "800";
-	public static final String HEIGHT = "400";
 
 	/**
 	 * 

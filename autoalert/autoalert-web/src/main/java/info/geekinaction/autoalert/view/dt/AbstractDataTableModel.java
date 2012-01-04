@@ -25,7 +25,9 @@ public abstract class AbstractDataTableModel<T> implements DataTableModel<T> {
 		this.data = data;
 		titles = new ArrayList<String>();
 		cells = new ArrayList<List<Object>>();
-		init();
+		clear();
+		processTitles();
+		processData();
 	}
 
 	/**
@@ -34,6 +36,14 @@ public abstract class AbstractDataTableModel<T> implements DataTableModel<T> {
 	 */
 	public void addTitle(String title) {
 		titles.add(title);
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public void insertTitle(int index, String title) {
+		titles.add(index, title);
 	}
 
 	/**
@@ -81,7 +91,9 @@ public abstract class AbstractDataTableModel<T> implements DataTableModel<T> {
 	 */
 	public void setData(List<T> obj) {
 		data = obj;
-		init();
+		clear();
+		processTitles();
+		processData();
 	}
 
 	/**
@@ -100,7 +112,12 @@ public abstract class AbstractDataTableModel<T> implements DataTableModel<T> {
 	/**
 	 * 
 	 */
-	protected abstract void init();
+	protected abstract void processTitles();
+	
+	/**
+	 * 
+	 */
+	protected abstract void processData();
 
 	/**
 	 * 

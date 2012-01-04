@@ -3,6 +3,12 @@
  */
 package info.geekinaction.autoalert.view.dt;
 
+import static info.geekinaction.autoalert.view.ViewConstants.CSS_TABLE;
+import static info.geekinaction.autoalert.view.ViewConstants.CSS_TABLE_CELL;
+import static info.geekinaction.autoalert.view.ViewConstants.CSS_TABLE_EVEN_ROW;
+import static info.geekinaction.autoalert.view.ViewConstants.CSS_TABLE_FIRST_ROW;
+import static info.geekinaction.autoalert.view.ViewConstants.CSS_TABLE_ODD_ROW;
+
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -12,11 +18,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class DataTable<E> extends FlexTable {
 
-	private static final String CSS_TABLE = "DataTable";
-	private static final String CSS_TABLE_FIRST_ROW = "DataTable-FirstRow";
-	private static final String CSS_TABLE_EVEN_ROW = "DataTable-EvenRow";
-	private static final String CSS_TABLE_ODD_ROW = "DataTable-OddRow";
-	private static final String CSS_TABLE_CELL = "DataTable-Cell";
+
 	
 	protected DataTableModel<E> model;
 

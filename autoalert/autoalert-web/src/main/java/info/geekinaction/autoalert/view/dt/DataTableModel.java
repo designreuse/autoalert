@@ -16,6 +16,13 @@ public interface DataTableModel<T> {
 	 * @param title
 	 */
 	public void addTitle(String title);
+	
+	/**
+	 * 
+	 * @param index
+	 * @param title
+	 */
+	public void insertTitle(int index, String title);
 
 	/**
 	 * 
