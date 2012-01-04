@@ -54,9 +54,8 @@ public class StorageStatusPanel extends AbstractAutoAlertPanel {
 		spTablespaces.setHeight(HEIGHT);
 		spTablespaces.setWidth(WIDTH);
 		
-		ButtonBase btnRefreshTablespaces = new PushButton(new Image(IMG_URL_REFRESH));
-		btnRefreshTablespaces.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent arg0) {
+		ButtonBase btnRefreshTablespaces = createRefreshButton(new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				controller.onStorageTablespacesRefresh();
 			}
 		});
@@ -72,9 +71,8 @@ public class StorageStatusPanel extends AbstractAutoAlertPanel {
 		spDatafiles.setHeight(HEIGHT);
 		spDatafiles.setWidth(WIDTH);
 
-		ButtonBase btnRefreshDatafiles = new PushButton(new Image(IMG_URL_REFRESH));
-		btnRefreshDatafiles.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent arg0) {
+		ButtonBase btnRefreshDatafiles = createRefreshButton(new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				controller.onStorageDatafilesRefresh();
 			}
 		});
@@ -120,7 +118,7 @@ public class StorageStatusPanel extends AbstractAutoAlertPanel {
 	 * @author csontosbl
 	 * 
 	 */
-	private static class TablespaceDataModel extends AbstractDataTableModel<Tablespace> {
+	private class TablespaceDataModel extends AbstractDataTableModel<Tablespace> {
 
 		/**
 		 * 
@@ -161,7 +159,7 @@ public class StorageStatusPanel extends AbstractAutoAlertPanel {
 				record.add(formatNumber(rec.getFreeMb()));
 				record.add(formatNumber(rec.getSizeRemainMb()));
 				record.add(formatNumber(rec.getSizeRemainPer()));
-				record.add(rec.getAlert());
+				record.add(StorageStatusPanel.this.createAlertImage(rec.getAlert()));
 				cells.add(record);
 			}
 		}
@@ -173,7 +171,7 @@ public class StorageStatusPanel extends AbstractAutoAlertPanel {
 	 * @author csontosbl
 	 * 
 	 */
-	private static class DatafileDataModel extends AbstractDataTableModel<Datafile> {
+	private class DatafileDataModel extends AbstractDataTableModel<Datafile> {
 
 		/**
 		 * 
@@ -189,7 +187,7 @@ public class StorageStatusPanel extends AbstractAutoAlertPanel {
 		@Override
 		protected void processTitles() {
 			// Column titles
-			addTitle(MESSAGES.tablespaceName()); // 1
+			//addTitle(MESSAGES.tablespaceName()); // 1
 			addTitle(MESSAGES.datafiles()); // 2
 			addTitle(MESSAGES.sizeMb()); // 3
 			addTitle(MESSAGES.usedMb()); // 4
@@ -205,7 +203,7 @@ public class StorageStatusPanel extends AbstractAutoAlertPanel {
 			for (Datafile rec : data) {
 				List<Object> record = new ArrayList<Object>();
 
-				record.add(rec.getTablespaceName());
+				//record.add(rec.getTablespaceName());
 				record.add(rec.getFileName());
 				record.add(formatNumber(rec.getSizeMb()));
 				record.add(formatNumber(rec.getUsedMb()));
@@ -213,7 +211,7 @@ public class StorageStatusPanel extends AbstractAutoAlertPanel {
 				record.add(formatNumber(rec.getFreeMb()));
 				record.add(formatNumber(rec.getSizeRemainMb()));
 				record.add(formatNumber(rec.getSizeRemainPer()));
-				record.add(rec.getAlert());
+				record.add(StorageStatusPanel.this.createAlertImage(rec.getAlert()));
 				cells.add(record);
 			}		
 		}

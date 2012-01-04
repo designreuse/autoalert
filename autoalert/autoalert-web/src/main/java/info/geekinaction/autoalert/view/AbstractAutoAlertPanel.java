@@ -3,10 +3,20 @@
  */
 package info.geekinaction.autoalert.view;
 
+import static info.geekinaction.autoalert.view.ViewConstants.IMG_URL_REFRESH;
+import static info.geekinaction.autoalert.view.ViewConstants.IMG_URL_WARNING;
+import static info.geekinaction.autoalert.view.ViewConstants.IMG_URL_OK;
+import static info.geekinaction.autoalert.view.ViewConstants.IMG_WIDTH;
+import static info.geekinaction.autoalert.view.ViewConstants.IMG_HEIGHT;
+
 import java.util.List;
 
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.ButtonBase;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
@@ -68,4 +78,33 @@ public abstract class AbstractAutoAlertPanel extends SimplePanel implements IAut
 	 */
 	public abstract void buildPanel();
 	
+	/**
+	 * 
+	 * @return
+	 */
+	protected ButtonBase createRefreshButton(ClickHandler clickHandler) {
+		ButtonBase button = new PushButton(new Image(IMG_URL_REFRESH), clickHandler);
+		button.setWidth(IMG_WIDTH);
+		button.setHeight(IMG_HEIGHT);
+		return button;
+	}
+	
+	/**
+	 * 
+	 * @param alert
+	 * @return
+	 */
+	protected Image createAlertImage(int alert) {
+		return createAlertImage(alert > 0);
+	}
+
+	/**
+	 * 
+	 * @param alert
+	 * @return
+	 */
+	protected Image createAlertImage(boolean alert) {
+		Image image = alert ? new Image(IMG_URL_WARNING) : new Image(IMG_URL_OK);
+		return image;
+	}
 }
