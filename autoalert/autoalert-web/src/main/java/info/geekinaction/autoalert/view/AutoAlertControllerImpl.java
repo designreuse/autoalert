@@ -85,7 +85,7 @@ public class AutoAlertControllerImpl implements IAutoAlertController {
 	 * 
 	 */
 	public void onInstanceCpuUsageRefresh() {
-		AsyncCallback<List<InstanceCpuUsage>> callback = new AutoAlertControllerAsyncCallback<List<InstanceCpuUsage>>(AutoAlertDisplay.STORAGE_DATAFILES);
+		AsyncCallback<List<InstanceCpuUsage>> callback = new AutoAlertControllerAsyncCallback<List<InstanceCpuUsage>>(AutoAlertDisplay.INSTANCE_CPU);
 		model.findInstanceCpuUsage(false, callback);
 	}
 
@@ -100,7 +100,7 @@ public class AutoAlertControllerImpl implements IAutoAlertController {
 	 * 
 	 */
 	public void onInstanceIoUsageRefresh() {
-		AsyncCallback<List<InstanceIoUsage>> callback = new AutoAlertControllerAsyncCallback<List<InstanceIoUsage>>(AutoAlertDisplay.STORAGE_DATAFILES);
+		AsyncCallback<List<InstanceIoUsage>> callback = new AutoAlertControllerAsyncCallback<List<InstanceIoUsage>>(AutoAlertDisplay.INSTANCE_IO);
 		model.findInstanceIoUsage(false, callback);
 	}
 
@@ -115,7 +115,7 @@ public class AutoAlertControllerImpl implements IAutoAlertController {
 	 * 
 	 */
 	public void onSessionByCpuRefresh() {
-		AsyncCallback<List<SessionCpuUsage>> callback = new AutoAlertControllerAsyncCallback<List<SessionCpuUsage>>(AutoAlertDisplay.STORAGE_DATAFILES);
+		AsyncCallback<List<SessionCpuUsage>> callback = new AutoAlertControllerAsyncCallback<List<SessionCpuUsage>>(AutoAlertDisplay.SESSIONS_BY_CPU);
 		model.findSessionCpuUsage(callback);
 	}
 
@@ -123,7 +123,7 @@ public class AutoAlertControllerImpl implements IAutoAlertController {
 	 * 
 	 */
 	public void onSessionByIoRefresh() {
-		AsyncCallback<List<SessionIoUsage>> callback = new AutoAlertControllerAsyncCallback<List<SessionIoUsage>>(AutoAlertDisplay.STORAGE_DATAFILES);
+		AsyncCallback<List<SessionIoUsage>> callback = new AutoAlertControllerAsyncCallback<List<SessionIoUsage>>(AutoAlertDisplay.SESSION_BY_IO);
 		model.findSessionIoUsage(callback);
 	}
 

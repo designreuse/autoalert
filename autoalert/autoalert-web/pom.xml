@@ -64,7 +64,8 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.16</version>
-			<!-- Due to Glassfish bug (GLASSFISH-13027) log4j was put into domain_dir/lib instead. -->
+			<!-- Due to Glassfish bug (GLASSFISH-13027) log4j was put into domain_dir/lib 
+				instead. -->
 			<scope>provided</scope>
 		</dependency>
 
@@ -109,10 +110,15 @@
 						<goals>
 							<goal>compile</goal>
 							<goal>generateAsync</goal>
-							<goal>test</goal>
+							<!-- 
+							<goal>i18n</goal>
+							 -->
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<i18nMessagesBundle>info.geekinaction.autoalert.view.AutoAlertMessages</i18nMessagesBundle>
+				</configuration>
 			</plugin>
 		</plugins>
 		<pluginManagement>
@@ -128,15 +134,9 @@
 							<pluginExecutions>
 								<pluginExecution>
 									<pluginExecutionFilter>
-										<groupId>
-											org.codehaus.mojo
-										</groupId>
-										<artifactId>
-											gwt-maven-plugin
-										</artifactId>
-										<versionRange>
-											[2.4.0,)
-										</versionRange>
+										<groupId>org.codehaus.mojo</groupId>
+										<artifactId>gwt-maven-plugin</artifactId>
+										<versionRange>[2.4.0,)</versionRange>
 										<goals>
 											<goal>generateAsync</goal>
 										</goals>

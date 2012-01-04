@@ -10,7 +10,6 @@ public class Datafile extends AbstractStorage {
 	private static final long serialVersionUID = 1L;
 
 	private String autoext;
-
 	private Float incrByMb;
 
 	/**

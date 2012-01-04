@@ -41,7 +41,7 @@
 			SELECT OBJECT(ts)
 			FROM Tablespace ts
 			WHERE ts.alert > ?1
-			ORDER BY ts.sizeRemainPer 
+			ORDER BY ts.sizeRemainPer, ts.tablespaceName
 		</query>
 	</named-query>
 
@@ -50,7 +50,7 @@
 			SELECT OBJECT(df)
 			FROM Datafile df
 			WHERE df.alert > ?1
-			ORDER BY df.sizeRemainPer
+			ORDER BY df.sizeRemainPer, df.fileName
 		</query>
 	</named-query>
 
@@ -150,6 +150,9 @@
 			</basic>
 			<basic name="serial">
 				<column name="SERIAL" />
+			</basic>
+			<basic name="status" >
+				<column name="STATUS"/>
 			</basic>
 			<basic name="spid">
 				<column name="SPID" />
@@ -275,7 +278,9 @@
 	<entity class="info.geekinaction.autoalert.model.domain.Session" access="PROPERTY">
 		<table name="VW_AA_ALL_SESSIONS" />
 		<attributes>
+			<!-- 
 			<basic name="status" />
+			 -->
 			<basic name="type" />
 		</attributes>
 	</entity>

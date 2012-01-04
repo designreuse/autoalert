@@ -3,14 +3,24 @@
  */
 package info.geekinaction.autoalert.view.ui;
 
-import java.util.List;
+import static info.geekinaction.autoalert.view.FormatUtil.formatDate;
+import static info.geekinaction.autoalert.view.ViewConstants.MESSAGES;
 
+import info.geekinaction.autoalert.model.domain.AbstractInstanceResourceUsage;
+import info.geekinaction.autoalert.model.domain.InstanceCpuUsage;
+import info.geekinaction.autoalert.model.domain.InstanceIoUsage;
 import info.geekinaction.autoalert.view.AbstractAutoAlertPanel;
 import info.geekinaction.autoalert.view.AutoAlertDisplay;
+import info.geekinaction.autoalert.view.dt.AbstractDataTableModel;
+import info.geekinaction.autoalert.view.dt.DataTable;
 
-import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.Widget;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.DecoratedTabPanel;
+import com.google.gwt.user.client.ui.Panel;
 
 /**
  * @author lcsontos
@@ -18,53 +28,98 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class InstanceStatusPanel extends AbstractAutoAlertPanel {
 
+	private DataTable<InstanceCpuUsage> dtInstanceCpuUsage;
+	private DataTable<InstanceIoUsage> dtInstanceIoUsage;
+	
 	/**
 	 * 
 	 */
-	public InstanceStatusPanel() {
-		/*
-		 * add(createInfoPanel(), "Info"); add(createCpuUsagePanel(), "CPU");
-		 * add(createIoUsagePanel(), "I/O");
-		 * 
-		 * selectTab(0);
-		 */
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	private Widget createInfoPanel() {
-		Grid grid = new Grid(10, 2);
-		grid.setText(0, 0, "Database ID:");
-		grid.setText(0, 1, "42342134");
-		grid.setText(1, 0, "Database name:");
-		grid.setText(1, 1, "RIA102");
-		return grid;
-	}
-
-	private Widget createCpuUsagePanel() {
-		return new SimplePanel();
-	}
-
-	private Widget createIoUsagePanel() {
-		return new SimplePanel();
-	}
-
 	@Override
 	public void buildPanel() {
-		// TODO Auto-generated method stub
+		DecoratedTabPanel tabPanel = new DecoratedTabPanel();
 
+		// Tablespaces
+		dtInstanceCpuUsage = new DataTable<InstanceCpuUsage>();
+		Panel vpInstanceCpuUsage = createContainer(dtInstanceCpuUsage, new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				controller.onInstanceCpuUsageRefresh();
+			}
+		});
+		
+		// Datafiles
+		dtInstanceIoUsage = new DataTable<InstanceIoUsage>();
+		Panel vpInstanceIoUsage = createContainer(dtInstanceIoUsage, new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				controller.onInstanceIoUsageRefresh();
+			}
+		});
+		
+		tabPanel.add(vpInstanceCpuUsage, MESSAGES.cpuUsageHistory());
+		tabPanel.add(vpInstanceIoUsage, MESSAGES.ioUsagehistory());
+		tabPanel.selectTab(0);
+
+		add(tabPanel);
 	}
 
+	/**
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
 	public void display(AutoAlertDisplay display, List<?> obj) {
-		// TODO Auto-generated method stub
-
+		super.display(display, obj);
+		switch (display) {
+		case INSTANCE_CPU:
+			List<InstanceCpuUsage> data1 = (List<InstanceCpuUsage>) obj;
+			InstanceResourceUsageModel<InstanceCpuUsage> model1 = new InstanceResourceUsageModel<InstanceCpuUsage>(data1);
+			dtInstanceCpuUsage.setModel(model1);			
+			break;
+		case INSTANCE_IO:
+			List<InstanceIoUsage> data2 = (List<InstanceIoUsage>) obj;
+			InstanceResourceUsageModel<InstanceIoUsage> model2 = new InstanceResourceUsageModel<InstanceIoUsage>(data2);
+			dtInstanceIoUsage.setModel(model2);			
+			break;
+		}
 	}
 
+	/**
+	 * 
+	 */
 	public void refresh() {
-		// TODO Auto-generated method stub
-
+		controller.onInstanceCpuUsageRefresh();
+		controller.onInstanceIoUsageRefresh();
 	}
+	
+	/**
+	 * 
+	 * @author lcsontos
+	 *
+	 */
+	private class InstanceResourceUsageModel<T extends AbstractInstanceResourceUsage> extends AbstractDataTableModel<T> {
+		
+		public InstanceResourceUsageModel(List<T> data) {
+			super(data);
+		}
 
+		@Override
+		protected void processTitles() {
+			addTitle(MESSAGES.beginTime()); // 1
+			addTitle(MESSAGES.endTime()); // 2
+			// TODO
+			addTitle("Resource usage"); // 3
+			addTitle(MESSAGES.alert()); // 4
+		}
+
+		@Override
+		protected void processData() {
+			for (AbstractInstanceResourceUsage rec : data) {
+				List<Object> record = new ArrayList<Object>();
+				record.add(formatDate(rec.getBeginTime()));
+				record.add(formatDate(rec.getEndTime()));
+				record.add(rec.getValue());
+				record.add(InstanceStatusPanel.this.createAlertImage(rec.getAlert()));
+				cells.add(record);
+			}
+		}
+	}
+	
 }

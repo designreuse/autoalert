@@ -4,10 +4,8 @@
 package info.geekinaction.autoalert.view.ui;
 
 import static info.geekinaction.autoalert.view.FormatUtil.formatNumber;
-import static info.geekinaction.autoalert.view.ViewConstants.HEIGHT;
-import static info.geekinaction.autoalert.view.ViewConstants.IMG_URL_REFRESH;
 import static info.geekinaction.autoalert.view.ViewConstants.MESSAGES;
-import static info.geekinaction.autoalert.view.ViewConstants.WIDTH;
+
 import info.geekinaction.autoalert.model.domain.Datafile;
 import info.geekinaction.autoalert.model.domain.Tablespace;
 import info.geekinaction.autoalert.view.AbstractAutoAlertPanel;
@@ -20,13 +18,8 @@ import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-
-import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.DecoratedTabPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.PushButton;
-import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Panel;
 
 /**
  * @author lcsontos
@@ -37,10 +30,6 @@ public class StorageStatusPanel extends AbstractAutoAlertPanel {
 	private DataTable<Tablespace> dtTablespaces;
 	private DataTable<Datafile> dtDatafiles;
 
-	public StorageStatusPanel() {
-		super();
-	}
-
 	/**
 	 * 
 	 */
@@ -50,38 +39,20 @@ public class StorageStatusPanel extends AbstractAutoAlertPanel {
 
 		// Tablespaces
 		dtTablespaces = new DataTable<Tablespace>();
-		ScrollPanel spTablespaces = new ScrollPanel(dtTablespaces);
-		spTablespaces.setHeight(HEIGHT);
-		spTablespaces.setWidth(WIDTH);
-		
-		ButtonBase btnRefreshTablespaces = createRefreshButton(new ClickHandler() {
+		Panel vpTablespaces = createContainer(dtTablespaces, new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				controller.onStorageTablespacesRefresh();
 			}
 		});
-
-		VerticalPanel vpTablespaces = new VerticalPanel();
-		vpTablespaces.setSpacing(10);
-		vpTablespaces.add(btnRefreshTablespaces);
-		vpTablespaces.add(spTablespaces);
-
+		
 		// Datafiles
 		dtDatafiles = new DataTable<Datafile>();
-		ScrollPanel spDatafiles = new ScrollPanel(dtDatafiles);
-		spDatafiles.setHeight(HEIGHT);
-		spDatafiles.setWidth(WIDTH);
-
-		ButtonBase btnRefreshDatafiles = createRefreshButton(new ClickHandler() {
+		Panel vpDatafiles = createContainer(dtDatafiles, new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				controller.onStorageDatafilesRefresh();
 			}
 		});
-
-		VerticalPanel vpDatafiles = new VerticalPanel();
-		vpDatafiles.setSpacing(10);
-		vpDatafiles.add(btnRefreshDatafiles);
-		vpDatafiles.add(spDatafiles);
-
+		
 		tabPanel.add(vpTablespaces, MESSAGES.tablespaces());
 		tabPanel.add(vpDatafiles, MESSAGES.datafiles());
 		tabPanel.selectTab(0);
@@ -89,6 +60,10 @@ public class StorageStatusPanel extends AbstractAutoAlertPanel {
 		add(tabPanel);
 	}
 
+	/**
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
 	public void display(AutoAlertDisplay display, List<?> obj) {
 		super.display(display, obj);
 		switch (display) {

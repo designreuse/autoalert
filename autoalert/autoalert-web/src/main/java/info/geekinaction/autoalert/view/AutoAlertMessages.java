@@ -1,17 +1,17 @@
 package info.geekinaction.autoalert.view;
 
 /**
- * Interface to represent the constants contained in resource bundle:
- * 	'C:/Devel/Workspaces/AutoAlert/AutoAlertWeb/src/com/aamtech/info.geekinaction.autoalert/view/AutoAlertMessages.properties'.
+ * Interface to represent the messages contained in resource bundle:
+ * 	D:/SVN/AUTOALERT/trunk/autoalert/autoalert-web/src/main/java/info/geekinaction/autoalert/view/AutoAlertMessages.properties'.
  */
-public interface AutoAlertMessages extends com.google.gwt.i18n.client.Constants {
+public interface AutoAlertMessages extends com.google.gwt.i18n.client.Messages {
   
   /**
    * Translated "Alert".
    * 
    * @return translated "Alert"
    */
-  @DefaultStringValue("Alert")
+  @DefaultMessage("Alert")
   @Key("alert")
   String alert();
 
@@ -20,16 +20,25 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Constants 
    * 
    * @return translated "All"
    */
-  @DefaultStringValue("All")
+  @DefaultMessage("All")
   @Key("all")
   String all();
+
+  /**
+   * Translated "Begin time".
+   * 
+   * @return translated "Begin time"
+   */
+  @DefaultMessage("Begin time")
+  @Key("beginTime")
+  String beginTime();
 
   /**
    * Translated "By Cpu".
    * 
    * @return translated "By Cpu"
    */
-  @DefaultStringValue("By Cpu")
+  @DefaultMessage("By Cpu")
   @Key("bycpu")
   String bycpu();
 
@@ -38,7 +47,7 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Constants 
    * 
    * @return translated "By I/O"
    */
-  @DefaultStringValue("By I/O")
+  @DefaultMessage("By I/O")
   @Key("byio")
   String byio();
 
@@ -47,25 +56,61 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Constants 
    * 
    * @return translated "CPU"
    */
-  @DefaultStringValue("CPU")
+  @DefaultMessage("CPU")
   @Key("cpu")
   String cpu();
+
+  /**
+   * Translated "CPU Usage History".
+   * 
+   * @return translated "CPU Usage History"
+   */
+  @DefaultMessage("CPU Usage History")
+  @Key("cpuUsageHistory")
+  String cpuUsageHistory();
+
+  /**
+   * Translated "CPU Usage [%]".
+   * 
+   * @return translated "CPU Usage [%]"
+   */
+  @DefaultMessage("CPU Usage [%]")
+  @Key("cpuUsagePercent")
+  String cpuUsagePercent();
+
+  /**
+   * Translated "Data file".
+   * 
+   * @return translated "Data file"
+   */
+  @DefaultMessage("Data file")
+  @Key("datafile")
+  String datafile();
 
   /**
    * Translated "Data files".
    * 
    * @return translated "Data files"
    */
-  @DefaultStringValue("Data files")
+  @DefaultMessage("Data files")
   @Key("datafiles")
   String datafiles();
+
+  /**
+   * Translated "End time".
+   * 
+   * @return translated "End time"
+   */
+  @DefaultMessage("End time")
+  @Key("endTime")
+  String endTime();
 
   /**
    * Translated "Free [MB]".
    * 
    * @return translated "Free [MB]"
    */
-  @DefaultStringValue("Free [MB]")
+  @DefaultMessage("Free [MB]")
   @Key("freeMb")
   String freeMb();
 
@@ -74,7 +119,7 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Constants 
    * 
    * @return translated "Info"
    */
-  @DefaultStringValue("Info")
+  @DefaultMessage("Info")
   @Key("info")
   String info();
 
@@ -83,7 +128,7 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Constants 
    * 
    * @return translated "Instance"
    */
-  @DefaultStringValue("Instance")
+  @DefaultMessage("Instance")
   @Key("instance")
   String instance();
 
@@ -92,25 +137,106 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Constants 
    * 
    * @return translated "I/O"
    */
-  @DefaultStringValue("I/O")
+  @DefaultMessage("I/O")
   @Key("io")
   String io();
+
+  /**
+   * Translated "I/O Usage".
+   * 
+   * @return translated "I/O Usage"
+   */
+  @DefaultMessage("I/O Usage")
+  @Key("ioUsage")
+  String ioUsage();
+
+  /**
+   * Translated "I/O Usage history".
+   * 
+   * @return translated "I/O Usage history"
+   */
+  @DefaultMessage("I/O Usage history")
+  @Key("ioUsagehistory")
+  String ioUsagehistory();
+
+  /**
+   * Translated "Logon time".
+   * 
+   * @return translated "Logon time"
+   */
+  @DefaultMessage("Logon time")
+  @Key("logonTime")
+  String logonTime();
+
+  /**
+   * Translated "Machine".
+   * 
+   * @return translated "Machine"
+   */
+  @DefaultMessage("Machine")
+  @Key("machine")
+  String machine();
+
+  /**
+   * Translated "Module".
+   * 
+   * @return translated "Module"
+   */
+  @DefaultMessage("Module")
+  @Key("module")
+  String module();
+
+  /**
+   * Translated "OS process ID".
+   * 
+   * @return translated "OS process ID"
+   */
+  @DefaultMessage("OS process ID")
+  @Key("osProcessId")
+  String osProcessId();
+
+  /**
+   * Translated "Program".
+   * 
+   * @return translated "Program"
+   */
+  @DefaultMessage("Program")
+  @Key("program")
+  String program();
 
   /**
    * Translated "Refresh".
    * 
    * @return translated "Refresh"
    */
-  @DefaultStringValue("Refresh")
+  @DefaultMessage("Refresh")
   @Key("refresh")
   String refresh();
+
+  /**
+   * Translated "Serial".
+   * 
+   * @return translated "Serial"
+   */
+  @DefaultMessage("Serial")
+  @Key("serial")
+  String serial();
+
+  /**
+   * Translated "Session ID".
+   * 
+   * @return translated "Session ID"
+   */
+  @DefaultMessage("Session ID")
+  @Key("sessionId")
+  String sessionId();
 
   /**
    * Translated "Session".
    * 
    * @return translated "Session"
    */
-  @DefaultStringValue("Session")
+  @DefaultMessage("Session")
   @Key("sessions")
   String sessions();
 
@@ -119,7 +245,7 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Constants 
    * 
    * @return translated "Max size [MB]"
    */
-  @DefaultStringValue("Max size [MB]")
+  @DefaultMessage("Max size [MB]")
   @Key("sizeMaxMb")
   String sizeMaxMb();
 
@@ -128,7 +254,7 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Constants 
    * 
    * @return translated "Size [MB] "
    */
-  @DefaultStringValue("Size [MB] ")
+  @DefaultMessage("Size [MB] ")
   @Key("sizeMb")
   String sizeMb();
 
@@ -137,7 +263,7 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Constants 
    * 
    * @return translated "Size Remaining [MB] "
    */
-  @DefaultStringValue("Size Remaining [MB] ")
+  @DefaultMessage("Size Remaining [MB] ")
   @Key("sizeRemainMb")
   String sizeRemainMb();
 
@@ -146,16 +272,25 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Constants 
    * 
    * @return translated "Size Remaining [%]"
    */
-  @DefaultStringValue("Size Remaining [%]")
+  @DefaultMessage("Size Remaining [%]")
   @Key("sizeRemainPer")
   String sizeRemainPer();
+
+  /**
+   * Translated "Status".
+   * 
+   * @return translated "Status"
+   */
+  @DefaultMessage("Status")
+  @Key("status")
+  String status();
 
   /**
    * Translated "Storage".
    * 
    * @return translated "Storage"
    */
-  @DefaultStringValue("Storage")
+  @DefaultMessage("Storage")
   @Key("storage")
   String storage();
 
@@ -164,7 +299,7 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Constants 
    * 
    * @return translated "Tablespace Name"
    */
-  @DefaultStringValue("Tablespace Name")
+  @DefaultMessage("Tablespace Name")
   @Key("tablespaceName")
   String tablespaceName();
 
@@ -173,16 +308,25 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Constants 
    * 
    * @return translated "Tablespaces"
    */
-  @DefaultStringValue("Tablespaces")
+  @DefaultMessage("Tablespaces")
   @Key("tablespaces")
   String tablespaces();
+
+  /**
+   * Translated "Terminal".
+   * 
+   * @return translated "Terminal"
+   */
+  @DefaultMessage("Terminal")
+  @Key("terminal")
+  String terminal();
 
   /**
    * Translated "User [MB]".
    * 
    * @return translated "User [MB]"
    */
-  @DefaultStringValue("User [MB]")
+  @DefaultMessage("User [MB]")
   @Key("usedMb")
   String usedMb();
 
@@ -191,7 +335,16 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Constants 
    * 
    * @return translated "Used [%]"
    */
-  @DefaultStringValue("Used [%]")
+  @DefaultMessage("Used [%]")
   @Key("usedPer")
   String usedPer();
+
+  /**
+   * Translated "Username".
+   * 
+   * @return translated "Username"
+   */
+  @DefaultMessage("Username")
+  @Key("username")
+  String username();
 }

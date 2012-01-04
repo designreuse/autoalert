@@ -20,7 +20,7 @@ public class DataTable<E> extends FlexTable {
 
 
 	
-	protected DataTableModel<E> model;
+	protected IDataTableModel<E> model;
 
 	/**
 	 * 
@@ -33,7 +33,7 @@ public class DataTable<E> extends FlexTable {
 	/**
 	 * 
 	 */
-	public DataTable(DataTableModel<E> model) {
+	public DataTable(IDataTableModel<E> model) {
 		this();
 		this.model = model;
 		load();
@@ -43,7 +43,7 @@ public class DataTable<E> extends FlexTable {
 	 * 
 	 * @return
 	 */
-	public DataTableModel<E> getModel() {
+	public IDataTableModel<E> getModel() {
 		return model;
 	}
 
@@ -51,7 +51,7 @@ public class DataTable<E> extends FlexTable {
 	 * 
 	 * @param model
 	 */
-	public void setModel(DataTableModel<E> model) {
+	public void setModel(IDataTableModel<E> model) {
 		this.model = model;
 		load();
 	}

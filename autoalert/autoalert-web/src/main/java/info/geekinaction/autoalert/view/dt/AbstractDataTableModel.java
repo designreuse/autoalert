@@ -12,7 +12,7 @@ import java.util.Stack;
  * @author lcsontos
  * 
  */
-public abstract class AbstractDataTableModel<T> implements DataTableModel<T> {
+public abstract class AbstractDataTableModel<T> implements IDataTableModel<T> {
 
 	protected List<T> data;
 	protected List<String> titles;
@@ -31,7 +31,7 @@ public abstract class AbstractDataTableModel<T> implements DataTableModel<T> {
 	}
 
 	/**
-	 * @see info.geekinaction.autoalert.view.dt.DataTableModel#addTitle(java.lang.String,
+	 * @see info.geekinaction.autoalert.view.dt.IDataTableModel#addTitle(java.lang.String,
 	 *      java.lang.Integer[])
 	 */
 	public void addTitle(String title) {
@@ -73,7 +73,7 @@ public abstract class AbstractDataTableModel<T> implements DataTableModel<T> {
 	}
 
 	/**
-	 * @see info.geekinaction.autoalert.view.dt.DataTableModel#getTitles()
+	 * @see info.geekinaction.autoalert.view.dt.IDataTableModel#getTitles()
 	 */
 	public List<String> getTitles() {
 		return titles;

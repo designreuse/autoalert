@@ -16,6 +16,7 @@ public abstract class AbstractSession extends AbstractDomainObject<Long> {
 
 	protected String spid;
 	protected Long serial;
+	protected String status;
 	protected String sqlText;
 	protected String terminal;
 	protected String username;
@@ -182,6 +183,22 @@ public abstract class AbstractSession extends AbstractDomainObject<Long> {
 	 */
 	public void setLogonTime(Date logonTime) {
 		this.logonTime = logonTime;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getStatus() {
+		return status;
+	}
+	
+	/**
+	 * 
+	 * @param status
+	 */
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

@@ -3,21 +3,28 @@
  */
 package info.geekinaction.autoalert.view;
 
+import static info.geekinaction.autoalert.view.ViewConstants.HEIGHT;
 import static info.geekinaction.autoalert.view.ViewConstants.IMG_URL_REFRESH;
 import static info.geekinaction.autoalert.view.ViewConstants.IMG_URL_WARNING;
 import static info.geekinaction.autoalert.view.ViewConstants.IMG_URL_OK;
 import static info.geekinaction.autoalert.view.ViewConstants.IMG_WIDTH;
 import static info.geekinaction.autoalert.view.ViewConstants.IMG_HEIGHT;
+import static info.geekinaction.autoalert.view.ViewConstants.WIDTH;
+
+import info.geekinaction.autoalert.view.dt.DataTable;
 
 import java.util.List;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * @author lcsontos
@@ -42,15 +49,6 @@ public abstract class AbstractAutoAlertPanel extends SimplePanel implements IAut
 		super(child);
 		buildPanel();
 	}
-	
-	/*
-	public AutoAlertMessages getMessages() {
-		if (messages == null) {
-			messages = GWT.create(AutoAlertMessages.class);
-		}
-		return messages;
-	}
-	*/
 	
 	/**
 	 * 
@@ -106,5 +104,25 @@ public abstract class AbstractAutoAlertPanel extends SimplePanel implements IAut
 	protected Image createAlertImage(boolean alert) {
 		Image image = alert ? new Image(IMG_URL_WARNING) : new Image(IMG_URL_OK);
 		return image;
+	}
+	
+	/**
+	 * 
+	 * @param dataTable
+	 * @return
+	 */
+	protected Panel createContainer(DataTable<?> dataTable, ClickHandler clickHandler) {
+		ScrollPanel sp = new ScrollPanel(dataTable);
+		sp.setHeight(HEIGHT);
+		sp.setWidth(WIDTH);
+		
+		ButtonBase btnRefresh = createRefreshButton(clickHandler);
+		
+		VerticalPanel vpTablespaces = new VerticalPanel();
+		vpTablespaces.setSpacing(10);
+		vpTablespaces.add(btnRefresh);
+		vpTablespaces.add(sp);
+		
+		return vpTablespaces;
 	}
 }

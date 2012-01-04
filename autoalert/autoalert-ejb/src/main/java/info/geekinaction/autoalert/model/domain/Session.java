@@ -9,7 +9,7 @@ public class Session extends AbstractSession {
 
 	private static final long serialVersionUID = 1L;
 
-	private String status;
+	// private String status;
 	private String type;
 
 	/**
@@ -17,22 +17,6 @@ public class Session extends AbstractSession {
 	 */
 	public Session() {
 		super();
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public String getStatus() {
-		return status;
-	}
-
-	/**
-	 * 
-	 * @param status
-	 */
-	public void setStatus(String status) {
-		this.status = status;
 	}
 
 	/**

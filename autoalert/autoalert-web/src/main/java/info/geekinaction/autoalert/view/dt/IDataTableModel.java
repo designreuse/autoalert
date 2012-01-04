@@ -9,7 +9,7 @@ import java.util.List;
  * @author lcsontos
  *
  */
-public interface DataTableModel<T> {
+public interface IDataTableModel<T> {
 
 	/**
 	 * 
