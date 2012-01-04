@@ -37,6 +37,4 @@ select p.ID,
                   from aa_parameters t
                  where param_name = 'PIO_USAGE_THRESHOLD') p
          where u.value > p.param(+)
-           and u.slice_count = 5) p
-/
-
+           and u.slice_count = 5) p;

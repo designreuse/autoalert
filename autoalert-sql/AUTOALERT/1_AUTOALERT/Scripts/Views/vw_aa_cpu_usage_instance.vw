@@ -36,8 +36,4 @@ select c.ID,
                   from aa_parameters t
                  where param_name = 'CPU_USAGE_THRESHOLD') p
          where u.value > p.param(+)
-           and u.slice_count = 5) c
-/
-
-
-
+           and u.slice_count = 5) c;

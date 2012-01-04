@@ -1,7 +1,8 @@
 create or replace force view vw_aa_cpu_usage_sessions as
 select ss.spid,
        ss.sid,
-       ss.SERIAL#,
+       ss.SERIAL,
+       ss.status,
        st.value,
        ss.SQL_TEXT,
        ss.USERNAME,
@@ -20,8 +21,6 @@ select ss.spid,
        vw_aa_all_sessions ss
  where ss.sid = st.sid
    and ss.type = 'USER'
-   and ss.STATUS = 'ACTIVE'
+   --and ss.STATUS = 'ACTIVE';
 /
-
-
 
