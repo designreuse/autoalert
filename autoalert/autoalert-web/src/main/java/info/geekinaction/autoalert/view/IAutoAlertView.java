@@ -13,7 +13,7 @@ public interface IAutoAlertView {
 	 * 
 	 * @param controller
 	 */
-	public void addActionListener(IAutoAlertController controller);
+	public void setActionListener(IAutoAlertController controller);
 	
 	/**
 	 * 

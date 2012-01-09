@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author lcsontos
  *
  */
-public abstract class AbstractDomainObject<K extends Serializable> implements Serializable {
+public abstract class AbstractDomainObject<K> implements Serializable {
 
 	private K key;
 	
@@ -40,7 +40,7 @@ public abstract class AbstractDomainObject<K extends Serializable> implements Se
 	 * 
 	 * @return
 	 */
-	public final K getKey() {
+	public K getKey() {
 		return key;
 	}
 	
@@ -48,7 +48,7 @@ public abstract class AbstractDomainObject<K extends Serializable> implements Se
 	 * 
 	 * @param key
 	 */
-	public final void setKey(K key) {
+	public void setKey(K key) {
 		if (key == null) {
 			throw new NullPointerException("Key cannot be null.");
 		}
@@ -60,11 +60,22 @@ public abstract class AbstractDomainObject<K extends Serializable> implements Se
 	 * 
 	 */
 	@Override
-	public final int hashCode() {
+	public int hashCode() {
 		if (compareAndSet(true, false)) {
-			hashCode = getKey().hashCode(); 
+			hashCode = (getKey() == null) ? 0 : getKey().hashCode(); 
 		}
 		return hashCode;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean equals(Object obj) {
+		if (this.key == null) { return false; }
+		if (obj == null) { return false; }
+		if (!(obj instanceof AbstractDomainObject<?>)) { return false; }
+		K key = ((AbstractDomainObject<K>) obj).getKey();
+		if (key == null) { return false; }
+		return this.key.equals(key);
 	}
 	
 	/**

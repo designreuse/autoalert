@@ -7,12 +7,12 @@ import java.util.Date;
  * @author lcsontos
  * 
  */
-public abstract class AbstractInstanceResourceUsage extends AbstractAlertable<Long> {
+public abstract class AbstractInstanceResourceUsage extends AbstractAlertable<String> {
 
 	private static final long serialVersionUID = 1L;
 
 	protected Integer lastSlice;
-	protected String timeSlice;
+	// protected String timeSlice;
 	protected Long sliceCount;
 	protected Date beginTime;
 	protected Date endTime;
@@ -25,28 +25,29 @@ public abstract class AbstractInstanceResourceUsage extends AbstractAlertable<Lo
 		super();
 	}
 
-	/**
+	/*
 	 * 
 	 * @return
-	 */
+	
 	public Long getId() {
 		return getKey();
 	}
-
-	/**
+	 */
+	/*
 	 * 
 	 * @param id
-	 */
 	public void setId(Long id) {
 		setKey(id);
 	}
+	 */
 
 	/**
 	 * 
 	 * @return
 	 */
 	public String getTimeSlice() {
-		return this.timeSlice;
+		// return this.timeSlice;
+		return getKey();
 	}
 
 	/**
@@ -54,7 +55,8 @@ public abstract class AbstractInstanceResourceUsage extends AbstractAlertable<Lo
 	 * @param timeSlice
 	 */
 	public void setTimeSlice(String timeSlice) {
-		this.timeSlice = timeSlice;
+		// this.timeSlice = timeSlice;
+		setKey(timeSlice);
 	}
 
 	/**

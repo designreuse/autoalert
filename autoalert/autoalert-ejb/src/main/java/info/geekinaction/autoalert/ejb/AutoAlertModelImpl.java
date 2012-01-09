@@ -4,6 +4,7 @@
 package info.geekinaction.autoalert.ejb;
 
 import static info.geekinaction.autoalert.common.CommonConstants.ISO_TIMESTAMP_FORMAT;
+
 import static info.geekinaction.autoalert.ejb.AutoAlertQuery.FIND_DATABASE;
 import static info.geekinaction.autoalert.ejb.AutoAlertQuery.FIND_DATAFILES;
 import static info.geekinaction.autoalert.ejb.AutoAlertQuery.FIND_INSTANCE_CPU_USAGE;
@@ -12,19 +13,27 @@ import static info.geekinaction.autoalert.ejb.AutoAlertQuery.FIND_SESSION;
 import static info.geekinaction.autoalert.ejb.AutoAlertQuery.FIND_SESSION_CPU_USAGE;
 import static info.geekinaction.autoalert.ejb.AutoAlertQuery.FIND_SESSION_IO_USAGE;
 import static info.geekinaction.autoalert.ejb.AutoAlertQuery.FIND_TABLESPACES;
+
 import static info.geekinaction.autoalert.ejb.EJBConstants.AUTOALERT_MODEL_JNDI;
 import static info.geekinaction.autoalert.ejb.EJBConstants.AUTOALERT_MODEL_NAME;
+import static info.geekinaction.autoalert.ejb.EJBConstants.TIMER_NAME;
+import static info.geekinaction.autoalert.ejb.EJBConstants.TIMER_INTERVAL;
+import static info.geekinaction.autoalert.ejb.EJBConstants.TIME_SLICE;
+import static info.geekinaction.autoalert.ejb.EJBConstants.TIME_SLICE_MSEC;
+import static info.geekinaction.autoalert.ejb.EJBConstants.TIME_SLICE_SEC;
+
 import static info.geekinaction.autoalert.model.domain.ParameterName.AUTOALERT_MAIL_FROM;
 import static info.geekinaction.autoalert.model.domain.ParameterName.AUTOALERT_RCPT_TO;
 import static info.geekinaction.autoalert.model.domain.ParameterName.AUTOALERT_SUBJECT;
+
 import static java.util.Calendar.MILLISECOND;
 import static java.util.Calendar.MINUTE;
 import static java.util.Calendar.SECOND;
+
 import info.geekinaction.autoalert.common.AbstractBusinessObject;
 import info.geekinaction.autoalert.common.util.DateUtil;
 import info.geekinaction.autoalert.common.util.LogUtil;
 import info.geekinaction.autoalert.jmx.IAutoAlertManagement;
-import info.geekinaction.autoalert.mail.AlertMessage;
 import info.geekinaction.autoalert.model.domain.Database;
 import info.geekinaction.autoalert.model.domain.Datafile;
 import info.geekinaction.autoalert.model.domain.InstanceCpuUsage;
@@ -35,28 +44,37 @@ import info.geekinaction.autoalert.model.domain.Session;
 import info.geekinaction.autoalert.model.domain.SessionCpuUsage;
 import info.geekinaction.autoalert.model.domain.SessionIoUsage;
 import info.geekinaction.autoalert.model.domain.Tablespace;
+import info.geekinaction.autoalert.model.incident.AutoAlertIncident;
+import info.geekinaction.autoalert.model.incident.AutoAlertIncidentListener;
+import info.geekinaction.autoalert.model.incident.IAutoAlertIncidentHandler;
 import info.geekinaction.autoalert.model.service.IAutoAlertModel;
 
+import java.io.Serializable;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
+import javax.ejb.Local;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.ejb.Timeout;
 import javax.ejb.Timer;
 import javax.ejb.TimerService;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -64,58 +82,31 @@ import org.apache.log4j.Logger;
  * 
  */
 @Stateless(name = AUTOALERT_MODEL_NAME, mappedName = AUTOALERT_MODEL_JNDI)
-@Interceptors({ AutoAlertModelInterceptor.class })
-public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoAlertModel {
+@Local({ IAutoAlertModel.class, IAutoAlertManagement.class, IAutoAlertIncidentHandler.class })
+@Interceptors({ AutoAlertAuditInterceptor.class })
+@TransactionAttribute(TransactionAttributeType.SUPPORTS)
+public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoAlertModel, IAutoAlertManagement, IAutoAlertIncidentHandler {
 	
 	private static final Logger logger = Logger.getLogger(AutoAlertModelImpl.class);
-
-	/**
-	 * Measured time slice in minutes
-	 */
-	private static final int TIME_SLICE = 5;
-
-	/**
-	 * 
-	 */
-	private static final int TIME_SLICE_SEC = 0;
-
-	/**
-	 * 
-	 */
-	private static final int TIME_SLICE_MSEC = 0;
-
-	/**
-	 * Timeout interval (5min)
-	 */
-	private static final int INTERVAL = 1 * 60 * 1000;
 
 	@PersistenceContext(unitName = "AutoAlertPU")
 	private EntityManager em;
 
-	//private SessionContext sessionContext;
-
 	// @Resource(name = "mail/aaSession")
 	private javax.mail.Session mailSession;
-	
-	private IAutoAlertManagement mbean;
 	
 	///// EJB lifecycle methods. /////
 	
 	@PostConstruct
 	@Override
 	public void init() {
-
+		logger.debug(this.toString() + " initialized.");
 	}
 	
 	@PreDestroy
 	@Override
 	public void destroy() {
-		try {
-			// TODO Implement destroy() here.
-			logger.info("Destroy successful.");
-		} catch (Exception e) {
-			logger.error("Error during deinitialization; reason: " + e.getMessage(), e);
-		}	
+		logger.debug(this.toString() + " destroyed.");
 	}
 	
 	/**
@@ -130,6 +121,7 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 	/**
 	 * 
 	 */
+	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Map<ParameterName, Parameter> findParameters() {
 		Query query = createQuery(AutoAlertQuery.FIND_PARAMETERS);
 		List<Parameter> params = (List<Parameter>) query.getResultList();
@@ -181,8 +173,7 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 		query.setParameter(1, alertParam);
 		query.setParameter(2, alertParam);
 
-		List<InstanceCpuUsage> retval = (List<InstanceCpuUsage>) query
-				.getResultList();
+		List<InstanceCpuUsage> retval = (List<InstanceCpuUsage>) query.getResultList();
 		return retval;
 	}
 
@@ -196,8 +187,7 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 		query.setParameter(1, alertParam);
 		query.setParameter(2, alertParam);
 
-		List<InstanceIoUsage> retval = (List<InstanceIoUsage>) query
-				.getResultList();
+		List<InstanceIoUsage> retval = (List<InstanceIoUsage>) query.getResultList();
 		return retval;
 	}
 
@@ -215,8 +205,7 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 	 */
 	public List<SessionCpuUsage> findSessionCpuUsage() {
 		Query query = createQuery(FIND_SESSION_CPU_USAGE);
-		List<SessionCpuUsage> retval = (List<SessionCpuUsage>) query
-				.getResultList();
+		List<SessionCpuUsage> retval = (List<SessionCpuUsage>) query.getResultList();
 		return retval;
 	}
 
@@ -242,10 +231,62 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 		return retval;
 	}
 	
+	/**
+	 * 
+	 */
 	@Override
 	public void reloadConfiguration() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public String getParameter(String paramName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public void setParameter(String paramName, String value) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+	public boolean storeIncident(AutoAlertIncident incident) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.HOUR, -4);
+
+		int checkSum = new AutoAlertIncidentListener().createCheckSum(incident);
+		Query query = createQuery(AutoAlertQuery.COUNT_INCIDENTS);
+		query.setParameter(1, checkSum); // Checksum
+		query.setParameter(2, calendar.getTime());
+		
+		int result = ((Number) query.getSingleResult()).intValue();
+		boolean similarIncidentExists = result > 0;
+		
+		if (!similarIncidentExists) {
+			em.persist(incident);
+		}
+		
+		return similarIncidentExists;
+	}
+	
+	/**
+	 * 
+	 * @param incident
+	 * @return
+	 */
+	private boolean storeIncident0(AutoAlertIncident incident) {
+		IAutoAlertIncidentHandler handler = sessionContext.getBusinessObject(IAutoAlertIncidentHandler.class);
+		return handler.storeIncident(incident);
 	}
 
 	/**
@@ -258,12 +299,33 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 		return em.createNamedQuery(queryName);
 
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	private Timer findTimer() {
+		TimerService timerService = sessionContext.getTimerService();
+		Collection<Timer> timers = (Collection<Timer>) timerService.getTimers();
+		for (Iterator<Timer> iterator = timers.iterator(); iterator.hasNext();) {
+			Timer timer = iterator.next();
+			Serializable info = timer.getInfo();
+			if (info.equals(TIMER_NAME)) {
+				return timer;
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * 
 	 */
-	public void schedule() {
+	@Override
+	public void startScheduler() {
 		TimerService timerService = sessionContext.getTimerService();
+		
+		// Find a former timer first
+		if (findTimer() != null) {
+			LogUtil.log(this, Level.WARN, "startScheduler(): Timer {0} has already been scheduled.", new Object[] { TIMER_NAME });
+			return;
+		}
 
 		// Start time
 		Calendar startTime = Calendar.getInstance();
@@ -280,14 +342,38 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 		startTime.set(MILLISECOND, TIME_SLICE_MSEC);
 
 		// Create timer
-		timerService.createTimer(Calendar.getInstance().getTime(), INTERVAL, null);
+		timerService.createTimer(startTime.getTime(), TIMER_INTERVAL, TIMER_NAME);
 
-		LogUtil.log(this, Level.INFO,
-				"Timer has been set. Start time: {0}, interval: {1} msec.",
-				new Object[] {
-						DateUtil.toChar(startTime.getTime(),
-								ISO_TIMESTAMP_FORMAT), new Integer(INTERVAL) });
-
+		Object[] msgParams = new Object[] { DateUtil.toChar(startTime.getTime(), ISO_TIMESTAMP_FORMAT), new Integer(TIMER_INTERVAL) };
+		LogUtil.log(this, Level.INFO, "startScheduler(): Timer has been set. Start time: {0}, interval: {1} msec.", msgParams);
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public void stopScheduler() {
+		Timer timer = findTimer();
+		if (timer == null) {
+			LogUtil.log(this, Level.WARN, "stopScheduler(): Timer {0} has not been found.", new Object[] { TIMER_NAME });
+			return;
+		}
+		timer.cancel();
+		LogUtil.log(this, Level.INFO, "stopScheduler(): Timer {0} has already been canceled.", new Object[] { TIMER_NAME });
+	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public void triggerScheduler() {
+		Timer timer = findTimer();
+		if (timer == null) {
+			LogUtil.log(this, Level.WARN, "triggerScheduler(): Timer {0} has not been found.", new Object[] { TIMER_NAME });
+			return;
+		}
+		timerHandle(timer);
+		LogUtil.log(this, Level.INFO, "triggerScheduler(): Timer {0} has been manually triggered.", new Object[] { TIMER_NAME });
 	}
 
 	/**
@@ -295,60 +381,68 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 	 * @param timer
 	 */
 	@Timeout
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void timerHandle(Timer timer) {
 
-		// Log next timeout
-		Date next = timer.getNextTimeout();
-		LogUtil.log(this, Level.INFO, "Timer expired. Next time will be: {0}",
-				new Object[] { DateUtil.toChar(next, ISO_TIMESTAMP_FORMAT) });
+		try {
+			// Log next timeout
+			Date next = timer.getNextTimeout();
+			LogUtil.log(this, Level.INFO, "timerHandle(): Timer {1} next expiration will be: {0}.", new Object[] { TIMER_NAME, DateUtil.toChar(next, ISO_TIMESTAMP_FORMAT) });
 
-		//////////////////////
-		// Check for alerts.
-		//////////////////////
+			//////////////////////
+			// Check for alerts.
+			//////////////////////
 
-		// Info about RDBMS instance
-		Database database = findDatabase();
+			// Info about RDBMS instance
+			Database database = findDatabase();
 
-		// Storage
-		List<Tablespace> tablespaces = findTablespaces(true);
-		List<Datafile> datafiles = findDatafiles(true);
+			// Storage
+			List<Tablespace> tablespaces = findTablespaces(true);
+			List<Datafile> datafiles = findDatafiles(true);
 
-		// Resources
-		List<InstanceCpuUsage> cpuUsageList = findInstanceCpuUsage(true);
-		List<InstanceIoUsage> ioUsageList = findInstanceIoUsage(true);
-		InstanceCpuUsage cpuUsage = cpuUsageList.size() > 0 ? cpuUsageList
-				.get(0) : null;
-		InstanceIoUsage ioUsage = ioUsageList.size() > 0 ? ioUsageList.get(0)
-				: null;
+			// Resources
+			List<InstanceCpuUsage> cpuUsageList = findInstanceCpuUsage(true);
+			List<InstanceIoUsage> ioUsageList = findInstanceIoUsage(true);
+			InstanceCpuUsage cpuUsage = cpuUsageList.size() > 0 ? cpuUsageList.get(0) : null;
+			InstanceIoUsage ioUsage = ioUsageList.size() > 0 ? ioUsageList.get(0) : null;
 
-		// Assable alert message
-		if (tablespaces.size() > 0 || cpuUsage != null || ioUsage != null) {
-			AlertMessage alertMessage = new AlertMessage(database, tablespaces,
-					datafiles, cpuUsage, ioUsage);
+			// Assable alert message
+			if (tablespaces.size() > 0 || cpuUsage != null || ioUsage != null) {
+				
+				AutoAlertIncident autoAlertIncident = new AutoAlertIncident(database, tablespaces, datafiles, cpuUsage, ioUsage);
+				
+				boolean similarIncidentExists = storeIncident0(autoAlertIncident);
+				if (!similarIncidentExists) {
+					// Message body
+					// String message = VelocityHelper.initVelocity().createMessage(incident);
+
+					// Get sender, recipients and subject
+					Map<ParameterName, Parameter> parameters = findParameters();
+					String from = Parameter.getParameterAsString(parameters, AUTOALERT_MAIL_FROM);
+					String rcptCsv = Parameter.getParameterAsString(parameters, AUTOALERT_RCPT_TO);
+					String[] rcpts = rcptCsv.split(",");
+					String _subject = Parameter.getParameterAsString(parameters, AUTOALERT_SUBJECT);
+
+					/*
+					 * Subject
+					 * 
+					 *  [SIDNAME] Automatic Alert
+					 *  
+					 */
+					StringBuilder subject = new StringBuilder();
+					subject.append('['); subject.append(database.getDbUniqueName()); subject.append(']');
+					subject.append(' ');
+					subject.append(_subject);
+					
+					// Send alert message
+					// MailUtil.sendMessage(mailSession, from, rcpts, subject.toString(), message);				
+				}
+				
+
+			}
 			
-			// Message body
-			String message = alertMessage.toString();
-
-			// Get sender, recipients and subject
-			Map<ParameterName, Parameter> parameters = findParameters();
-			String from = Parameter.getParameterAsString(parameters, AUTOALERT_MAIL_FROM);
-			String rcptCsv = Parameter.getParameterAsString(parameters, AUTOALERT_RCPT_TO);
-			String[] rcpts = rcptCsv.split(",");
-			String _subject = Parameter.getParameterAsString(parameters, AUTOALERT_SUBJECT);
-
-			/*
-			 * Subject
-			 * 
-			 *  [SIDNAME] Automatic Alert
-			 *  
-			 */
-			StringBuilder subject = new StringBuilder();
-			subject.append('['); subject.append(database.getDbUniqueName()); subject.append(']');
-			subject.append(' ');
-			subject.append(_subject);
-			
-			// Send alert message
-			AlertMessage.sendMessage(mailSession, from, rcpts, subject.toString(), message);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
 
 	}

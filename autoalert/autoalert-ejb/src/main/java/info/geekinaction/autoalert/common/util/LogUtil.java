@@ -4,9 +4,9 @@
 package info.geekinaction.autoalert.common.util;
 
 import java.text.MessageFormat;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 
 /**
  * @author lcsontos
@@ -27,14 +27,8 @@ public class LogUtil {
 	 * @param throwable
 	 * @param params
 	 */
-	public static void log(Object source, Level level, String message, Throwable throwable, Object ... params) {
-		
-		// Set logger name
-		String loggerName = source.getClass().getName();
-		Logger logger = Logger.getLogger(loggerName);
-		
-		// Log sequence number
-		long logSequence = System.currentTimeMillis();
+	
+	public static void log(Logger logger, Level level, String message, Throwable throwable, Object ... params) {
 		
 		// Log message
 		String _message = message;
@@ -46,16 +40,20 @@ public class LogUtil {
 		}
 		
 		// Create log entry
-		LogRecord record = new LogRecord(level, _message);
-		record.setMillis(logSequence);
-		record.setSequenceNumber(logSequence);
-		
-		if (throwable != null) {
-			record.setThrown(throwable);
-		}
-		
-		// Log event
-		logger.log(record);
+		logger.log(level, _message, throwable);
+	}
+	
+	/**
+	 * 
+	 * @param source
+	 * @param level
+	 * @param message
+	 * @param throwable
+	 * @param params
+	 */
+	public static void log(Object source, Level level, String message, Throwable throwable, Object ... params) {
+		Logger logger = Logger.getLogger(source.getClass());
+		log(logger, level, message, throwable, params);		
 	}
 	
 	/**

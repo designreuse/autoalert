@@ -1,0 +1,17 @@
+-- Create table
+create table AA_INCIDENT
+(
+  ID            NUMBER(19) not null,
+  CHECKSUM      NUMBER(10) not null,
+  TIME_DETECTED TIMESTAMP(3) default systimestamp not null,
+  DETAILS       CLOB
+) tablespace AUTOALERT_DATA;
+
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table AA_INCIDENT
+  add constraint AA_INCIDENT_PK primary key (ID)
+  using index tablespace AUTOALERT_IDX;
+  
+-- Create/Recreate indexes 
+create index AA_INCIDENT_IDX1 on AA_INCIDENT (CHECKSUM, TIME_DETECTED)
+  tablespace AUTOALERT_IDX;

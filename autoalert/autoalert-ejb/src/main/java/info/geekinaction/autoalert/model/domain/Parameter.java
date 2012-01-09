@@ -1,7 +1,5 @@
 package info.geekinaction.autoalert.model.domain;
 
-
-import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -9,7 +7,7 @@ import java.util.Map;
  * @author lcsontos
  *
  */
-public class Parameter extends AbstractDomainObject<String> implements Serializable {
+public class Parameter extends AbstractDomainObject<String> {
 
 	private static final long serialVersionUID = 1L;
 

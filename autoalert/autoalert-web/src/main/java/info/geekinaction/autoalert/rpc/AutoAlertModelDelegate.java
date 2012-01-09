@@ -53,7 +53,6 @@ public final class AutoAlertModelDelegate extends RemoteServiceServlet implement
 	@Override
 	public void init() throws ServletException {
 		super.init();
-		schedule();
 		logger.info("Initialized.");
 	}
 	
@@ -183,21 +182,6 @@ public final class AutoAlertModelDelegate extends RemoteServiceServlet implement
 		return retval;
 	}
 	
-	@Override
-	public void reloadConfiguration() { }
-
-	/**
-	 * 
-	 */
-	public void schedule() {
-		try {
-			model.schedule();
-			logger.info("Scheduler initialized.");
-		} catch (RuntimeException e) {
-			logger.error(e.getMessage(), e);
-		}
-	}
-
 	/**
 	 * 
 	 * @param e

@@ -89,16 +89,4 @@ public interface IAutoAlertModelAsync {
 	 */
 	void findSessionIoUsage(AsyncCallback<List<SessionIoUsage>> callback);
 	
-	/**
-	 * 
-	 * @param callback
-	 */
-	void reloadConfiguration(AsyncCallback<Void> callback);
-
-	/**
-	 * 
-	 * @param callback
-	 */
-	void schedule(AsyncCallback<Void> callback);
-
 }

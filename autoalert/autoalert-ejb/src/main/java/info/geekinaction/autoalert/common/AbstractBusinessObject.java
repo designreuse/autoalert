@@ -41,7 +41,7 @@ public abstract class AbstractBusinessObject {
 	 * 
 	 * @return User name.
 	 */
-	protected final String getCurrentUser() {
+	public final String getCurrentUser() {
 		Principal principal = sessionContext.getCallerPrincipal();
 		return principal != null ? principal.getName() : null;
 	}

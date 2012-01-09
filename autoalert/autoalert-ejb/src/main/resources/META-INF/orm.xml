@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd"
-	version="1.0">
+<entity-mappings version="2.0" xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd">
 
 	<!-- Query parameters of AutoAlert application -->
 	<named-query name="findParameters">
@@ -11,8 +8,7 @@
 
 	<!-- Query info about RDBMS instance -->
 	<named-query name="findDatabase">
-		<query>SELECT OBJECT(db) FROM Database db
-	    </query>
+		<query>SELECT OBJECT(db) FROM Database db</query>
 	</named-query>
 
 	<named-query name="findInstanceCpuUsage">
@@ -68,6 +64,10 @@
 		<query>SELECT OBJECT(s)	FROM SessionIoUsage s ORDER BY s.value DESC</query>
 	</named-query>
 
+	<named-query name="countIncidents">
+		<query>SELECT COUNT(i) FROM AutoAlertIncident i WHERE i.checkSum = ?1 AND i.timeDetected > ?2</query>
+	</named-query>
+
 	<mapped-superclass class="info.geekinaction.autoalert.model.domain.AbstractAlertable" access="PROPERTY">
 		<attributes>
 			<basic name="threshold" />
@@ -77,14 +77,20 @@
 
 	<mapped-superclass class="info.geekinaction.autoalert.model.domain.AbstractInstanceResourceUsage" access="PROPERTY">
 		<attributes>
-			<id name="id">
+			<!-- 
+			<id name="id" />
+			 -->
+			<id name="timeSlice">
+				<column name="TIME_SLICE" />
 			</id>
 			<basic name="lastSlice">
 				<column name="LAST_SLICE" />
 			</basic>
+			<!-- 
 			<basic name="timeSlice">
 				<column name="TIME_SLICE" />
 			</basic>
+			 -->
 			<basic name="sliceCount">
 				<column name="SLICE_COUNT" />
 			</basic>
@@ -258,7 +264,7 @@
 		<table name="AA_PARAMETERS" />
 		<attributes>
 			<id name="paramName">
-				<column name="PARAM_NAME"/>
+				<column name="PARAM_NAME" />
 			</id>
 			<basic name="paramDesc">
 				<column name="PARAM_DESC"/>
@@ -291,6 +297,72 @@
 		
 	<entity class="info.geekinaction.autoalert.model.domain.SessionIoUsage" access="PROPERTY">
 		<table name="VW_AA_PIO_USAGE_SESSIONS" />
+	</entity>
+	
+	<entity class="info.geekinaction.autoalert.model.incident.AutoAlertIncident" access="PROPERTY">
+		<table name="AA_INCIDENT" />
+		<entity-listeners>
+			<entity-listener class="info.geekinaction.autoalert.model.incident.AutoAlertIncidentListener">
+				<pre-persist method-name="prePersist"/>
+				<pre-update method-name="preUpdate"/>
+				<post-load method-name="postLoad"/>
+			</entity-listener>
+		</entity-listeners>
+		<attributes>
+			<id name="id">
+				<column name="ID"/>
+				<generated-value strategy="SEQUENCE" generator="AA_SEQ"/>
+				<sequence-generator name="AA_SEQ" sequence-name="AA_SEQ" allocation-size="1"/>
+			</id>
+			<basic name="checkSum">
+				<column name="CHECKSUM"/>
+			</basic>
+			<basic name="timeDetected">
+				<column name="TIME_DETECTED"/>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="details" fetch="LAZY">
+				<column name="DETAILS" />
+				<lob/>
+			</basic>
+			<transient name="database"/>
+			<transient name="datafiles"/>
+			<transient name="tablespaces"/>
+			<transient name="cpuUsage"/>
+			<transient name="ioUsage"/>
+		</attributes>
+	</entity>
+
+	<entity class="info.geekinaction.autoalert.model.domain.AuditTrail" access="PROPERTY">
+		<table name="AA_AUDIT_TRAIL" />
+		<attributes>
+			<id name="id">
+				<column name="ID"/>
+				<generated-value strategy="SEQUENCE" generator="AA_SEQ"/>
+				<sequence-generator name="AA_SEQ" sequence-name="AA_SEQ" allocation-size="1"/>
+			</id>
+			<basic name="username">
+				<column name="USERNAME"/>
+			</basic>
+			<basic name="auditTime">
+				<column name="AUDIT_TIME"/>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="componentName">
+				<column name="COMPONENT_NAME"/>
+			</basic>
+			<basic name="methodName">
+				<column name="METHOD_NAME"/>
+			</basic>
+			<basic name="execBeginTime">
+				<column name="EXEC_BEGIN_TIME"/>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="execEndTime">
+				<column name="EXEC_END_TIME"/>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+		</attributes>
 	</entity>
 
 </entity-mappings>

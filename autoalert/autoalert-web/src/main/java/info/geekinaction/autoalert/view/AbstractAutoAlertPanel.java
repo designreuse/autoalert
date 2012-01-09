@@ -4,51 +4,45 @@
 package info.geekinaction.autoalert.view;
 
 import static info.geekinaction.autoalert.view.ViewConstants.HEIGHT;
+import static info.geekinaction.autoalert.view.ViewConstants.IMG_HEIGHT;
+import static info.geekinaction.autoalert.view.ViewConstants.IMG_URL_OK;
 import static info.geekinaction.autoalert.view.ViewConstants.IMG_URL_REFRESH;
 import static info.geekinaction.autoalert.view.ViewConstants.IMG_URL_WARNING;
-import static info.geekinaction.autoalert.view.ViewConstants.IMG_URL_OK;
 import static info.geekinaction.autoalert.view.ViewConstants.IMG_WIDTH;
-import static info.geekinaction.autoalert.view.ViewConstants.IMG_HEIGHT;
 import static info.geekinaction.autoalert.view.ViewConstants.WIDTH;
 
 import info.geekinaction.autoalert.view.dt.DataTable;
 
 import java.util.List;
 
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.LazyPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author lcsontos
  *
  */
-public abstract class AbstractAutoAlertPanel extends SimplePanel implements IAutoAlertPanel<List<?>> {
+public abstract class AbstractAutoAlertPanel extends LazyPanel implements IAutoAlertPanel<List<?>> {
 
 	protected AutoAlertMessages messages;
 	protected IAutoAlertController controller;
 	
-	/**
-	 * 
-	 */
 	public AbstractAutoAlertPanel() {
-		buildPanel();
+		this(false);
+	}
+	
+	public AbstractAutoAlertPanel(boolean visible) {
+		setVisible(visible);
 	}
 
-	/**
-	 * @param child
-	 */
-	public AbstractAutoAlertPanel(Element child) {
-		super(child);
-		buildPanel();
-	}
+	protected abstract Widget createWidget();
 	
 	/**
 	 * 
@@ -70,11 +64,6 @@ public abstract class AbstractAutoAlertPanel extends SimplePanel implements IAut
 			return;
 		}
 	}
-	
-	/**
-	 * 
-	 */
-	public abstract void buildPanel();
 	
 	/**
 	 * 

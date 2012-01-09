@@ -17,7 +17,8 @@ public enum AutoAlertQuery {
 	FIND_DATAFILES ("findDatafiles"),
 	FIND_SESSION ("findSession"),
 	FIND_SESSION_CPU_USAGE ("findSessionCpuUsage"),
-	FIND_SESSION_IO_USAGE ("findSessionIoUsage");
+	FIND_SESSION_IO_USAGE ("findSessionIoUsage"),
+	COUNT_INCIDENTS ("countIncidents");
 	
 	private String queryName;
 	

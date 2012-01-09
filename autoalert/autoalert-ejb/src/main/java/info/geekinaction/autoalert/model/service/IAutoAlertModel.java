@@ -18,9 +18,6 @@ import info.geekinaction.autoalert.model.exception.AutoAlertException;
 import java.util.List;
 import java.util.Map;
 
-import javax.ejb.Local;
-
-
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -28,7 +25,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  * @author lcsontos
  * 
  */
-@Local
 @RemoteServiceRelativePath("model")
 public interface IAutoAlertModel extends RemoteService {
 
@@ -86,14 +82,4 @@ public interface IAutoAlertModel extends RemoteService {
 	 */
 	List<SessionIoUsage> findSessionIoUsage() throws AutoAlertException;
 	
-	/**
-	 * 
-	 */
-	void reloadConfiguration();
-	
-	/**
-	 * 
-	 */
-	void schedule();
-
 }

@@ -21,6 +21,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.DecoratedTabPanel;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author lcsontos
@@ -35,7 +36,7 @@ public class InstanceStatusPanel extends AbstractAutoAlertPanel {
 	 * 
 	 */
 	@Override
-	public void buildPanel() {
+	protected Widget createWidget() {
 		DecoratedTabPanel tabPanel = new DecoratedTabPanel();
 
 		// Tablespaces
@@ -57,8 +58,8 @@ public class InstanceStatusPanel extends AbstractAutoAlertPanel {
 		tabPanel.add(vpInstanceCpuUsage, MESSAGES.cpuUsageHistory());
 		tabPanel.add(vpInstanceIoUsage, MESSAGES.ioUsagehistory());
 		tabPanel.selectTab(0);
-
-		add(tabPanel);
+		
+		return tabPanel;
 	}
 
 	/**

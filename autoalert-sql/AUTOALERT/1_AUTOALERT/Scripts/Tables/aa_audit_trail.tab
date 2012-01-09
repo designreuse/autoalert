@@ -1,0 +1,20 @@
+-- Create table
+create table AA_AUDIT_TRAIL
+(
+  ID              number(19) not null,
+  USERNAME        varchar2(50),
+  AUDIT_TIME      timestamp(3) default systimestamp not null,
+  COMPONENT_NAME  varchar2(250) not null,
+  METHOD_NAME     varchar2(100) not null,
+  EXEC_BEGIN_TIME timestamp(3),
+  EXEC_END_TIME   timestamp(3)
+) tablespace AUTOALERT_DATA;
+ 
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table AA_AUDIT_TRAIL
+  add constraint AA_AUDIT_TRAIL_PK primary key (ID)
+  using index tablespace AUTOALERT_IDX;
+  
+-- Create/Recreate indexes 
+create index AA_AUDIT_TRAIL_IDX1 on AA_AUDIT_TRAIL (username, audit_time) tablespace AUTOALERT_IDX;  
+create index AA_AUDIT_TRAIL_IDX2 on AA_AUDIT_TRAIL (component_name, method_name) tablespace AUTOALERT_IDX;

@@ -3,13 +3,13 @@
 	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" version="2.5">
-	
+
 	<display-name>AutoAlertWeb</display-name>
-	
+
 	<listener>
 		<listener-class>info.geekinaction.autoalert.InitListener</listener-class>
 	</listener>
-	
+
 	<servlet>
 		<description>
 		</description>
@@ -18,22 +18,33 @@
 		<servlet-class>info.geekinaction.autoalert.rpc.AutoAlertModelDelegate</servlet-class>
 		<load-on-startup>0</load-on-startup>
 	</servlet>
-	
+
 	<servlet-mapping>
 		<servlet-name>AutoAlertModelDelegate</servlet-name>
 		<url-pattern>/autoalert/model</url-pattern>
 	</servlet-mapping>
+
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
-	
-	<!-- 
-	<ejb-local-ref>
-		<ejb-ref-name>ejb/local/AutoAlertModel</ejb-ref-name>
-		<ejb-ref-type>Session</ejb-ref-type>
-		<local>info.geekinaction.autoalert.model.service.IAutoAlertModel</local>
-		<ejb-link>AutoAlertModel</ejb-link>
-	</ejb-local-ref>
-	 -->
-	 
+
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>AutoAlertWeb</web-resource-name>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>users</role-name>
+		</auth-constraint>
+	</security-constraint>
+
+	<login-config>
+		<auth-method>BASIC</auth-method>
+		<realm-name>file</realm-name>
+	</login-config>
+
+	<security-role>
+		<role-name>users</role-name>
+	</security-role>
+
 </web-app>
