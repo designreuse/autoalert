@@ -34,7 +34,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  */
 public final class AutoAlertModelDelegate extends RemoteServiceServlet implements IAutoAlertModel {
 	
-	private final Logger logger = Logger.getLogger(this.getClass());
+	private static final Logger logger = Logger.getLogger(AutoAlertModelDelegate.class);
 	
 	/**
 	 * 

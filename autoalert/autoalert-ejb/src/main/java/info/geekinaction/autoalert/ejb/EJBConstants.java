@@ -4,15 +4,32 @@
 package info.geekinaction.autoalert.ejb;
 
 /**
+ * 
+ * Constants for all EJB components
+ * 
  * @author lcsontos
  *
  */
 public interface EJBConstants {
 	
+	/**
+	 * Name of the mail stateless EJB object.
+	 */
 	public static final String AUTOALERT_MODEL_NAME = "AutoAlertModel";
+	
+	/**
+	 * Global JNDI name of the object above.
+	 */
 	public static final String AUTOALERT_MODEL_JNDI = "ejb/AutoAlertModel";
 	
+	/**
+	 * Global JNDI name of the JMS audit queue.
+	 */
 	public static final String AUTOALERT_AUDIT_QUEUE = "jms/aaAuditQueue";
+	
+	/**
+	 * Global JNDI name of the JMS audit queue factory.
+	 */
 	public static final String AUTOALERT_AUDIT_QUEUE_FACTORY = "jms/aaAuditQueueFactory";
 	
 	/**

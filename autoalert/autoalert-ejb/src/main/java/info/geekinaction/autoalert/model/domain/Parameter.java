@@ -15,7 +15,7 @@ public class Parameter extends AbstractDomainObject<String> {
 
 	private String paramType;
 
-	private Float paramNumValue;
+	private Integer paramNumValue;
 
 	private String paramVcharValue;
 
@@ -78,7 +78,7 @@ public class Parameter extends AbstractDomainObject<String> {
 	 * 
 	 * @return
 	 */
-	public Float getParamNumValue() {
+	public Integer getParamNumValue() {
 		return this.paramNumValue;
 	}
 
@@ -86,7 +86,7 @@ public class Parameter extends AbstractDomainObject<String> {
 	 * 
 	 * @param paramNumValue
 	 */
-	public void setParamNumValue(Float paramNumValue) {
+	public void setParamNumValue(Integer paramNumValue) {
 		this.paramNumValue = paramNumValue;
 	}
 
@@ -104,6 +104,21 @@ public class Parameter extends AbstractDomainObject<String> {
 	 */
 	public void setParamVcharValue(String paramVcharValue) {
 		this.paramVcharValue = paramVcharValue;
+	}
+	
+	/**
+	 * 
+	 * @param value
+	 */
+	public void setValue(String value) {
+		if ("V".equals(paramType)) {
+			setParamVcharValue(value);
+		} else if("N".equals(paramType)) {
+			Integer _value = Integer.parseInt((String) value);
+			setParamNumValue(_value);
+		} else {
+			throw new IllegalStateException("Invalid parameter type.");
+		}
 	}
 	
 	/**
@@ -127,12 +142,12 @@ public class Parameter extends AbstractDomainObject<String> {
 	 * @param parameterName
 	 * @return
 	 */
-	public static Float getParameterAsFloat(Map<ParameterName, Parameter> parameters, ParameterName parameterName) {
+	public static Integer getParameterAsInteger(Map<ParameterName, Parameter> parameters, ParameterName parameterName) {
 		if (parameters == null || parameterName == null || !parameterName.getParamType().equals("N")) {
 			throw new IllegalArgumentException("Neither argument can be null and parameterName must indicate a numeric based parameter value.");
 		}
 
-		Float value = parameters.get(parameterName).getParamNumValue();
+		Integer value = parameters.get(parameterName).getParamNumValue();
 		return value;
 	}
 

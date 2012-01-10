@@ -3,6 +3,7 @@
  */
 package info.geekinaction.autoalert.view;
 
+import info.geekinaction.autoalert.model.domain.Database;
 import info.geekinaction.autoalert.model.domain.Datafile;
 import info.geekinaction.autoalert.model.domain.InstanceCpuUsage;
 import info.geekinaction.autoalert.model.domain.InstanceIoUsage;
@@ -93,7 +94,8 @@ public class AutoAlertControllerImpl implements IAutoAlertController {
 	 * 
 	 */
 	public void onInstanceInfoRefresh() {
-		// TODO Auto-generated method stub
+		AsyncCallback<Database> callback = new AutoAlertControllerAsyncCallback<Database>(AutoAlertDisplay.INSTANCE_INFO);
+		model.findDatabase(callback);
 	}
 
 	/**

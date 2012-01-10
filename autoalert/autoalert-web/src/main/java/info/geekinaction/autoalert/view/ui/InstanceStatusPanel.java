@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author lcsontos
  * 
  */
-public class InstanceStatusPanel extends AbstractAutoAlertPanel {
+public class InstanceStatusPanel extends AbstractAutoAlertPanel<List<? extends AbstractInstanceResourceUsage>> {
 
 	private DataTable<InstanceCpuUsage> dtInstanceCpuUsage;
 	private DataTable<InstanceIoUsage> dtInstanceIoUsage;
@@ -66,7 +66,7 @@ public class InstanceStatusPanel extends AbstractAutoAlertPanel {
 	 * 
 	 */
 	@SuppressWarnings("unchecked")
-	public void display(AutoAlertDisplay display, List<?> obj) {
+	public void display(AutoAlertDisplay display, List<? extends AbstractInstanceResourceUsage> obj) {
 		super.display(display, obj);
 		switch (display) {
 		case INSTANCE_CPU:

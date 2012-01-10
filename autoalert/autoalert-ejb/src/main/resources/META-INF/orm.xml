@@ -257,6 +257,25 @@
 				<column name="RESETLOGS_TIME"/>
 				<temporal>TIMESTAMP</temporal>
 			</basic>
+			<basic name="hostName">
+				<column name="HOST_NAME"/>
+			</basic>
+			<basic name="version">
+				<column name="VERSION"/>
+			</basic>
+			<basic name="banner">
+				<column name="BANNER"/>
+			</basic>
+			<basic name="startupTime">
+				<column name="STARTUP_TIME"/>
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="loginsAllowed">
+				<column name="LOGINS_ALLOWED"/>
+			</basic>
+			<basic name="shutdownPending">
+				<column name="SHUTDOWN_PENDING"/>
+			</basic>
 		</attributes>
 	</entity>
 	

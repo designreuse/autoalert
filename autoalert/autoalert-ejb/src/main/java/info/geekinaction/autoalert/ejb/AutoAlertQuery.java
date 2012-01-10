@@ -4,6 +4,8 @@
 package info.geekinaction.autoalert.ejb;
 
 /**
+ * Enumerates JPQL named queries.
+ * 
  * @author lcsontos
  *
  */

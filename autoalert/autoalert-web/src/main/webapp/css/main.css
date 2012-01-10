@@ -1,0 +1,31 @@
+html, body {
+   margin: 0;
+   padding: 0;
+   height: 100%;
+}
+
+#CONTAINER {
+   min-height: 100%;
+   position: relative;
+}
+
+#HEADER {
+   background: #00CCFF;
+   color: #4D4D4D;   
+   padding: 10px;
+}
+
+#MAIN {
+   padding: 20px;
+   padding-bottom: 60px;
+}
+
+#FOOTER {
+   position: absolute;
+   text-align: center;
+   bottom: 0;
+   width: 100%;
+   padding: 10px;
+   height: 20px;
+   background: #4D4D4D;
+}

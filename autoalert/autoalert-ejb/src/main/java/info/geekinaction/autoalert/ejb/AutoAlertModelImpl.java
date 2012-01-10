@@ -33,13 +33,16 @@ import static java.util.Calendar.SECOND;
 import info.geekinaction.autoalert.common.AbstractBusinessObject;
 import info.geekinaction.autoalert.common.util.DateUtil;
 import info.geekinaction.autoalert.common.util.LogUtil;
+import info.geekinaction.autoalert.common.util.MailUtil;
 import info.geekinaction.autoalert.jmx.IAutoAlertManagement;
+import info.geekinaction.autoalert.mail.VelocityHelper;
 import info.geekinaction.autoalert.model.domain.Database;
 import info.geekinaction.autoalert.model.domain.Datafile;
 import info.geekinaction.autoalert.model.domain.InstanceCpuUsage;
 import info.geekinaction.autoalert.model.domain.InstanceIoUsage;
 import info.geekinaction.autoalert.model.domain.Parameter;
 import info.geekinaction.autoalert.model.domain.ParameterName;
+import info.geekinaction.autoalert.model.domain.ParameterScope;
 import info.geekinaction.autoalert.model.domain.Session;
 import info.geekinaction.autoalert.model.domain.SessionCpuUsage;
 import info.geekinaction.autoalert.model.domain.SessionIoUsage;
@@ -53,10 +56,10 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -78,6 +81,11 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
+ * 
+ * THIS HEART OF THE SYSTEM
+ * 
+ * Business logic implementation.
+ * 
  * @author lcsontos
  * 
  */
@@ -89,11 +97,22 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 	
 	private static final Logger logger = Logger.getLogger(AutoAlertModelImpl.class);
 
+	/**
+	 * Persistence context.
+	 */
 	@PersistenceContext(unitName = "AutoAlertPU")
 	private EntityManager em;
 
+	/**
+	 * Mail session
+	 */
 	// @Resource(name = "mail/aaSession")
 	private javax.mail.Session mailSession;
+	
+	/**
+	 * System wide parameters.
+	 */
+	private static Map<ParameterName, Parameter> systemParameters;
 	
 	///// EJB lifecycle methods. /////
 	
@@ -119,26 +138,14 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 	}
 
 	/**
-	 * 
+	 * @see info.geekinaction.autoalert.model.service.IAutoAlertModel#findParameters()
 	 */
-	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public Map<ParameterName, Parameter> findParameters() {
-		Query query = createQuery(AutoAlertQuery.FIND_PARAMETERS);
-		List<Parameter> params = (List<Parameter>) query.getResultList();
-		
-		// Convert to proper collection format.
-		Map<ParameterName, Parameter> retval = new HashMap<ParameterName, Parameter>();
-		for (Parameter param : params) {
-			
-			// Name of the current parameter.
-			ParameterName pname = ParameterName.valueOf(param.getParamName());
-			
-			retval.put(pname, param);
+		if (systemParameters == null) {
+			reloadConfiguration();
 		}
-		
-		params.clear();
-		
-		return retval;
+		// Return parameter map.
+		return systemParameters;
 	}
 	
 	/**
@@ -230,48 +237,131 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 		List<Tablespace> retval = (List<Tablespace>) query.getResultList();
 		return retval;
 	}
-	
+
 	/**
-	 * 
+	 * @see info.geekinaction.autoalert.jmx.IAutoAlertManagement#reloadConfiguration()
 	 */
 	@Override
 	public void reloadConfiguration() {
-		// TODO Auto-generated method stub
-		
+		try {
+			// If this method is called for the first time the parameter map does no yet exists.
+			if (systemParameters == null) {
+				systemParameters = new  ConcurrentHashMap<ParameterName, Parameter>();
+			}
+			
+			// Query parameters from the database.
+			Query query = createQuery(AutoAlertQuery.FIND_PARAMETERS);
+			List<Parameter> params = (List<Parameter>) query.getResultList();
+			
+			// Convert to proper collection format.
+			for (Parameter param : params) {
+				// Name of the current parameter.
+				ParameterName pname = ParameterName.valueOf(param.getParamName());
+				systemParameters.put(pname, param);
+			}
+		} catch (RuntimeException e) {
+			logger.error(e.getMessage(), e);
+		}
 	}
 	
 	/**
-	 * 
+	 * @see info.geekinaction.autoalert.jmx.IAutoAlertManagement#getParameter()
 	 */
 	@Override
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public String getParameter(String paramName) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			// Find the parameter name in the enum.
+			ParameterName parameterName = ParameterName.valueOf(paramName);
+			
+			// If there is no such parameter in the map.
+			Parameter parameter = systemParameters.get(parameterName);
+			if (parameter == null) {
+				return null;
+			}
+			
+			// Prepare for returning the value
+			String retval = null;
+			if ("V".equals(parameter.getParamType())) {
+				retval = Parameter.getParameterAsString(systemParameters, parameterName);
+			} else if ("N".equals(parameter.getParamType())) {
+				retval = Parameter.getParameterAsInteger(systemParameters, parameterName).toString();
+			} else {
+				// parameter.getParamType() must be either "V" or "N".
+				throw new IllegalStateException("Invalid parameter type");
+			}
+			
+			return retval;
+		} catch (RuntimeException e) {
+			logger.error(e.getMessage(), e);
+			return null;
+		}
 	}
 	
 	/**
-	 * 
+	 * @see info.geekinaction.autoalert.jmx.IAutoAlertManagement#setParameter()
 	 */
 	@Override
-	public void setParameter(String paramName, String value) {
-		// TODO Auto-generated method stub
-		
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
+	public void setParameter(String paramName, String parameterScope, String value) {
+		try {
+			
+			// Find the parameter name in the enum.
+			ParameterName parameterName = ParameterName.valueOf(paramName);
+			ParameterScope _parameterScope = ParameterScope.valueOf(parameterScope);
+			
+			// If the given parameter does not exists in the initial map, that parameter is invalid.
+			if (!systemParameters.containsKey(parameterName)) {
+				throw new IllegalArgumentException("Such a parameter does not exists.");
+			}
+			
+			// Get the current value.
+			Parameter parameter = systemParameters.get(parameterName);
+			
+			// Determine how to store the new value;
+			switch(_parameterScope) {
+			// Both in DB and MEMORY
+			case BOTH:
+			// Just temporarily in memory.
+			case MEMORY:
+				parameter.setValue(value);
+				systemParameters.put(parameterName, parameter);
+				if (_parameterScope.equals(ParameterScope.MEMORY)) {
+					break;
+				}
+			// Just in the DB.
+			case DATABASE:
+				parameter = em.find(Parameter.class, parameterName.name());
+				parameter.setValue(value);
+				em.merge(parameter);
+			}
+		} catch (RuntimeException e) {
+			logger.error(e.getMessage(), e);
+		}
 	}
 	
+	/**
+	 * @see info.geekinaction.autoalert.model.incident.IAutoAlertIncidentHandler#storeIncident(AutoAlertIncident)
+	 */
 	@Override
 	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public boolean storeIncident(AutoAlertIncident incident) {
+		// Calculate time frame.
 		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.HOUR, -4);
+		// TODO Make this a system wide parameter.
+		calendar.add(Calendar.MINUTE, -24 * 60);
 
+		// Calculate a checkSum for the incident.
 		int checkSum = new AutoAlertIncidentListener().createCheckSum(incident);
 		Query query = createQuery(AutoAlertQuery.COUNT_INCIDENTS);
 		query.setParameter(1, checkSum); // Checksum
 		query.setParameter(2, calendar.getTime());
 		
+		// Lets see if there were similar incidents in the past like this.
 		int result = ((Number) query.getSingleResult()).intValue();
 		boolean similarIncidentExists = result > 0;
 		
+		// If not store this incident.
 		if (!similarIncidentExists) {
 			em.persist(incident);
 		}
@@ -280,11 +370,17 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 	}
 	
 	/**
+	 * INTERNAL USE ONLY
+	 * 
+	 * As storeIncident() has been declared to create a NEW transaction,
+	 * automatic transaction handling functionality of the JTA engine could not be exploited
+	 * unless we call storeIncident() throught the container.  
 	 * 
 	 * @param incident
 	 * @return
 	 */
 	private boolean storeIncident0(AutoAlertIncident incident) {
+		// Acquire a proxy to this EJB object.
 		IAutoAlertIncidentHandler handler = sessionContext.getBusinessObject(IAutoAlertIncidentHandler.class);
 		return handler.storeIncident(incident);
 	}
@@ -299,7 +395,12 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 		return em.createNamedQuery(queryName);
 
 	}
-	
+
+	/**
+	 * Finds our scheduled timer.
+	 * 
+	 * @return A scheduled timer of NULL if there is no such timer.
+	 */
 	@SuppressWarnings("unchecked")
 	private Timer findTimer() {
 		TimerService timerService = sessionContext.getTimerService();
@@ -315,7 +416,7 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 	}
 	
 	/**
-	 * 
+	 * @see IAutoAlertManagement#startScheduler()
 	 */
 	@Override
 	public void startScheduler() {
@@ -349,7 +450,7 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 	}
 	
 	/**
-	 * 
+	 * @see IAutoAlertManagement#stopScheduler()
 	 */
 	@Override
 	public void stopScheduler() {
@@ -363,7 +464,7 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 	}
 	
 	/**
-	 * 
+	 * @see IAutoAlertManagement#triggerScheduler()
 	 */
 	@Override
 	public void triggerScheduler() {
@@ -377,8 +478,11 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 	}
 
 	/**
+	 * THIS METHOD IS INTENDED TO BE CALLED BY THE EJB CONTAINER ONLY
 	 * 
-	 * @param timer
+	 * timerHandle() gets executed when the scheduled timer expires.
+	 * 
+	 * @param timer A timer object which is passed by the container upon timer expiration.
 	 */
 	@Timeout
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -411,10 +515,12 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 				
 				AutoAlertIncident autoAlertIncident = new AutoAlertIncident(database, tablespaces, datafiles, cpuUsage, ioUsage);
 				
+				// If such an incident has not been detected before send and E-mail.
 				boolean similarIncidentExists = storeIncident0(autoAlertIncident);
 				if (!similarIncidentExists) {
+					
 					// Message body
-					// String message = VelocityHelper.initVelocity().createMessage(incident);
+					String message = VelocityHelper.initVelocity().createMessage(autoAlertIncident);
 
 					// Get sender, recipients and subject
 					Map<ParameterName, Parameter> parameters = findParameters();
@@ -435,10 +541,8 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 					subject.append(_subject);
 					
 					// Send alert message
-					// MailUtil.sendMessage(mailSession, from, rcpts, subject.toString(), message);				
+					MailUtil.sendMessage(mailSession, from, rcpts, subject.toString(), message);				
 				}
-				
-
 			}
 			
 		} catch (Exception e) {

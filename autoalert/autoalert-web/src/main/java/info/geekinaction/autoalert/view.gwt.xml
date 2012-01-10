@@ -11,6 +11,7 @@
 
 	<!-- Define sources to compile -->
 	<source path="view" />
+	<source path="security" />
 
 	<!-- Enable emulated exception stack -->
 	<set-property name="compiler.stackMode" value="emulated" />

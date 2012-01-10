@@ -3,8 +3,8 @@ package info.geekinaction.autoalert.common;
 /**
  * System wide constants.
  *  
- * @author csontosbl
- * @version $LastChangedRevision: 1056 $
+ * @author lcsontos
+
  */
 public interface CommonConstants {
 

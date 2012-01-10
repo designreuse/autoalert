@@ -18,6 +18,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.apache.log4j.Logger;
 
 /**
+ * Instrumentation MBean implementation.
+ * 
  * @author lcsontos
  *
  */
@@ -54,7 +56,7 @@ public class AutoAlertInstrumentationImpl extends MBeanSupport implements IAutoA
 	}
 
 	/**
-	 * 
+	 * @see IAutoAlertInstrumentation#getUptime()
 	 */
 	@Override
 	public String getUptime() {
@@ -62,7 +64,7 @@ public class AutoAlertInstrumentationImpl extends MBeanSupport implements IAutoA
 	}
 	
 	/**
-	 * 
+	 * @see IAutoAlertInstrumentation#instrumentMethod(String, long)
 	 */
 	@Override
 	public void instrumentMethod(String methodName, long elapsedTime) {
@@ -71,8 +73,7 @@ public class AutoAlertInstrumentationImpl extends MBeanSupport implements IAutoA
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @see IAutoAlertInstrumentation#getEJBMethods()
 	 */
 	@Override
 	public synchronized Set<String> getEJBMethods() {
@@ -81,9 +82,7 @@ public class AutoAlertInstrumentationImpl extends MBeanSupport implements IAutoA
 	}
 
 	/**
-	 * 
-	 * @param methodName
-	 * @return
+	 * @see IAutoAlertInstrumentation#getCallCountForMethod(String)
 	 */
 	@Override
 	public int getCallCountForMethod(String methodName) {
@@ -92,9 +91,7 @@ public class AutoAlertInstrumentationImpl extends MBeanSupport implements IAutoA
 	}
 
 	/**
-	 * 
-	 * @param methodName
-	 * @return
+	 * @see IAutoAlertInstrumentation#getRuntimeStatForMethod(String)
 	 */
 	@Override
 	public double getRuntimeStatForMethod(String methodName) {
@@ -103,6 +100,16 @@ public class AutoAlertInstrumentationImpl extends MBeanSupport implements IAutoA
 	}
 	
 	/**
+	 * INTERNAL USE ONLY
+	 * 
+	 * Runtime statistics are first gathered to a queue
+	 * which is frequently polled for new data by a separate thread (see below).
+	 * 
+	 *  This method is called by <code>StatisticsUpdaterThread</code> or
+	 *  when getEJBMethods(), getCallCountForMethod(), getRuntimeStatForMethod() are executed.
+	 *  
+	 *  @see AutoAlertInstrumentationImpl.StatisticsUpdaterThread
+	 *  @return True is there were new data the queue on the course of this execution.
 	 * 
 	 */
 	private boolean updateStatistics() {
@@ -110,11 +117,14 @@ public class AutoAlertInstrumentationImpl extends MBeanSupport implements IAutoA
 		
 		while (!statisticsQueue.isEmpty()) {
 			
+			// Poll the queue for new data
 			RuntimeInfo runtimeInfo = statisticsQueue.poll();
 			if (runtimeInfo == null) {
 				break;
 			}
 			
+			// This block should be run synchronized to maintain consistency,
+			// since multiple HashMaps are tocuhed.
 			synchronized (this) {
 				updated = true;
 				
@@ -167,6 +177,8 @@ public class AutoAlertInstrumentationImpl extends MBeanSupport implements IAutoA
 	
 	/**
 	 * 
+	 * Gathers new statistics frequently.
+	 * 
 	 * @author lcsontos
 	 *
 	 */
@@ -185,6 +197,10 @@ public class AutoAlertInstrumentationImpl extends MBeanSupport implements IAutoA
 			} while (!stopStatisticsUpdaterThread);
 		}
 	}
+	
+	/////////////////////////////////////
+	///// MBEAN life-cycle methods. /////
+	/////////////////////////////////////
 	
 	/**
 	 * @see javax.management.MBeanRegistration#postRegister(java.lang.Boolean)

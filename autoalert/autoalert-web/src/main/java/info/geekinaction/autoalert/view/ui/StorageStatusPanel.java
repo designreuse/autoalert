@@ -6,6 +6,7 @@ package info.geekinaction.autoalert.view.ui;
 import static info.geekinaction.autoalert.view.FormatUtil.formatNumber;
 import static info.geekinaction.autoalert.view.ViewConstants.MESSAGES;
 
+import info.geekinaction.autoalert.model.domain.AbstractStorage;
 import info.geekinaction.autoalert.model.domain.Datafile;
 import info.geekinaction.autoalert.model.domain.Tablespace;
 import info.geekinaction.autoalert.view.AbstractAutoAlertPanel;
@@ -26,7 +27,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author lcsontos
  * 
  */
-public class StorageStatusPanel extends AbstractAutoAlertPanel {
+public class StorageStatusPanel extends AbstractAutoAlertPanel<List<? extends AbstractStorage>> {
 
 	private DataTable<Tablespace> dtTablespaces;
 	private DataTable<Datafile> dtDatafiles;
@@ -65,7 +66,7 @@ public class StorageStatusPanel extends AbstractAutoAlertPanel {
 	 * 
 	 */
 	@SuppressWarnings("unchecked")
-	public void display(AutoAlertDisplay display, List<?> obj) {
+	public void display(AutoAlertDisplay display, List<? extends AbstractStorage> obj) {
 		super.display(display, obj);
 		switch (display) {
 		case STORAGE_TABLESPACES:

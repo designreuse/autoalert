@@ -22,6 +22,9 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 /**
+ * 
+ * This interface constitutes the business model of the application
+ * 
  * @author lcsontos
  * 
  */
@@ -30,56 +33,86 @@ public interface IAutoAlertModel extends RemoteService {
 
 	/**
 	 * 
-	 * @return
+	 * Returns the currently valid paramters of the application
+	 *  
+	 * @return A parameter map.
 	 */
-	Map<ParameterName, Parameter> findParameters() throws AutoAlertException;
+	public Map<ParameterName, Parameter> findParameters() throws AutoAlertException;
 	
 	/**
 	 * 
-	 * @return
+	 * Returns an object which describes the properties of that database instance which
+	 * we are connected to.
+	 * 
+	 * @return A database object.
+	 * 
 	 */
-	Database findDatabase() throws AutoAlertException;;
+	public Database findDatabase() throws AutoAlertException;
 
 	/**
 	 * 
-	 * @return
+	 * Returns the CPU usage history of the current database instance
+	 * in an 1 hour moving window.
+	 * 
+	 * @param alertsOnly Returns only those records which indicates threshold violations.
+	 * @return CPU usage history data.
+	 * 
 	 */
-	List<InstanceCpuUsage> findInstanceCpuUsage(boolean alertsOnly) throws AutoAlertException;;
+	public List<InstanceCpuUsage> findInstanceCpuUsage(boolean alertsOnly) throws AutoAlertException;;
 
 	/**
 	 * 
-	 * @return
+	 * Returns the I/O usage history of the current database instance
+	 * in an 1 hour moving window.
+	 * 
+	 * @param alertsOnly Returns only those records which indicates threshold violations.
+	 * @return I/O usage history data.
+	 * 
 	 */
-	List<InstanceIoUsage> findInstanceIoUsage(boolean alertsOnly) throws AutoAlertException;;
+	public List<InstanceIoUsage> findInstanceIoUsage(boolean alertsOnly) throws AutoAlertException;;
+
+	/**
+	 * Returns the list of tablespaces of the database.
+	 *
+	 * @param alertsOnly Returns only those records which indicates threshold violations.
+	 * @return The list of tablespaces of the database.
+	 * 
+	 */
+	public List<Tablespace> findTablespaces(boolean alertsOnly) throws AutoAlertException;;
+
+	/**
+	 * Returns the list of data files of the database.
+	 *
+	 * @param alertsOnly Returns only those records which indicates threshold violations.
+	 * @return The list of data files of the database.
+	 * 
+	 */
+	public List<Datafile> findDatafiles(boolean alertsOnly) throws AutoAlertException;;
 
 	/**
 	 * 
-	 * @return
+	 * Returns a list of connected sessions to the database.
+	 * 
+	 * @return List of sessions.
 	 */
-	List<Tablespace> findTablespaces(boolean alertsOnly) throws AutoAlertException;;
+	public List<Session> findSession() throws AutoAlertException;
 
 	/**
 	 * 
-	 * @return
+	 * Returns the top CPU consumer session of the database.
+	 * 
+	 * @return TOP CPU consumer sessions.
+	 * 
 	 */
-	List<Datafile> findDatafiles(boolean alertsOnly) throws AutoAlertException;;
+	public List<SessionCpuUsage> findSessionCpuUsage() throws AutoAlertException;;
 
 	/**
 	 * 
-	 * @return
-	 */
-	List<Session> findSession() throws AutoAlertException;;
-
-	/**
+	 * Returns the top I/O consumer session of the database.
 	 * 
-	 * @return
-	 */
-	List<SessionCpuUsage> findSessionCpuUsage() throws AutoAlertException;;
-
-	/**
+	 * @return TOP I/O consumer sessions.
 	 * 
-	 * @return
 	 */
-	List<SessionIoUsage> findSessionIoUsage() throws AutoAlertException;
+	public List<SessionIoUsage> findSessionIoUsage() throws AutoAlertException;
 	
 }

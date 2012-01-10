@@ -10,6 +10,8 @@ import java.util.Set;
 
 import info.geekinaction.autoalert.model.service.IAutoAlertModel;
 import info.geekinaction.autoalert.model.service.IAutoAlertModelAsync;
+import info.geekinaction.autoalert.security.IAutoAlertSecurity;
+import info.geekinaction.autoalert.security.IAutoAlertSecurityAsync;
 import info.geekinaction.autoalert.view.AutoAlertControllerImpl;
 import info.geekinaction.autoalert.view.AutoAlertViewImpl;
 import info.geekinaction.autoalert.view.IAutoAlertController;
@@ -46,6 +48,8 @@ public final class AutoAlertApp implements EntryPoint {
 	public void onModuleLoad() {
 		
 		final IAutoAlertModelAsync model = GWT.create(IAutoAlertModel.class);
+		final IAutoAlertSecurityAsync securityAsync = GWT.create(IAutoAlertSecurity.class);
+		
 		final IAutoAlertView view = new AutoAlertViewImpl(model);
 		final IAutoAlertController controller = new AutoAlertControllerImpl(model, view);
 		

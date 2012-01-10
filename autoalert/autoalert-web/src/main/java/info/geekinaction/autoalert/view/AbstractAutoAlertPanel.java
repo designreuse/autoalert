@@ -13,8 +13,6 @@ import static info.geekinaction.autoalert.view.ViewConstants.WIDTH;
 
 import info.geekinaction.autoalert.view.dt.DataTable;
 
-import java.util.List;
-
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.Image;
@@ -29,7 +27,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author lcsontos
  *
  */
-public abstract class AbstractAutoAlertPanel extends LazyPanel implements IAutoAlertPanel<List<?>> {
+public abstract class AbstractAutoAlertPanel<D> extends LazyPanel implements IAutoAlertPanel<D> {
 
 	protected AutoAlertMessages messages;
 	protected IAutoAlertController controller;
@@ -59,8 +57,8 @@ public abstract class AbstractAutoAlertPanel extends LazyPanel implements IAutoA
 	}
 	
 	@Override
-	public void display(AutoAlertDisplay display, List<?> obj) {
-		if (display == null || obj == null || obj.size() == 0) {
+	public void display(AutoAlertDisplay display, D obj) {
+		if (display == null || obj == null) {
 			return;
 		}
 	}
@@ -97,11 +95,11 @@ public abstract class AbstractAutoAlertPanel extends LazyPanel implements IAutoA
 	
 	/**
 	 * 
-	 * @param dataTable
+	 * @param widget
 	 * @return
 	 */
-	protected Panel createContainer(DataTable<?> dataTable, ClickHandler clickHandler) {
-		ScrollPanel sp = new ScrollPanel(dataTable);
+	protected Panel createContainer(Widget widget, ClickHandler clickHandler) {
+		ScrollPanel sp = new ScrollPanel(widget);
 		sp.setHeight(HEIGHT);
 		sp.setWidth(WIDTH);
 		

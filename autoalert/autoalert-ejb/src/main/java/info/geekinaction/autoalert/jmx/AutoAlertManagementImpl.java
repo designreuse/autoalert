@@ -5,6 +5,8 @@ package info.geekinaction.autoalert.jmx;
 
 import static info.geekinaction.autoalert.ejb.EJBConstants.AUTOALERT_MODEL_JNDI;
 
+import javax.naming.NamingException;
+
 import info.geekinaction.autoalert.common.util.CachingServiceLocator;
 
 import org.apache.log4j.Logger;
@@ -50,9 +52,9 @@ public class AutoAlertManagementImpl extends MBeanSupport implements IAutoAlertM
 	 * 
 	 */
 	@Override
-	public void setParameter(String paramName, String value) {
+	public void setParameter(String paramName, String parameterScope, String value) {
 		try {
-			getEjbProxy().setParameter(paramName, value);
+			getEjbProxy().setParameter(paramName, parameterScope, value);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -95,7 +97,7 @@ public class AutoAlertManagementImpl extends MBeanSupport implements IAutoAlertM
 	 * 
 	 * @return
 	 */
-	private IAutoAlertManagement getEjbProxy() {
+	private IAutoAlertManagement getEjbProxy() throws NamingException {
 		if (ejbProxy == null) {
 			ejbProxy = CachingServiceLocator.lookupStatelessEJB(AUTOALERT_MODEL_JNDI, IAutoAlertManagement.class);
 		}

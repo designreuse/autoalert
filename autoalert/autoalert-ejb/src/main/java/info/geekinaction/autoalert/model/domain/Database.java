@@ -12,28 +12,24 @@ public class Database extends AbstractDomainObject<Long> {
 	private static final long serialVersionUID = 1L;
 
 	private String name;
-
 	private String dbUniqueName;
-
 	private Date created;
-
 	private Date resetlogsTime;
-
 	private String logMode;
-
 	private String controlfileType;
-
 	private Date controlfileCreated;
-
 	private String openMode;
-
 	private String databaseRole;
-
 	private String platformName;
-
 	private Long currentScn;
-
-	private String flashbackOn;
+	private Boolean flashbackOn;
+	
+	private String hostName;
+	private String version;
+	private String banner;
+	private Date startupTime;
+	private Boolean loginsAllowed;
+	private Boolean shutdownPending;	
 
 	/**
 	 * 
@@ -239,7 +235,7 @@ public class Database extends AbstractDomainObject<Long> {
 	 * 
 	 * @return
 	 */
-	public String getFlashbackOn() {
+	public Boolean getFlashbackOn() {
 		return this.flashbackOn;
 	}
 
@@ -247,8 +243,56 @@ public class Database extends AbstractDomainObject<Long> {
 	 * 
 	 * @param flashbackOn
 	 */
-	public void setFlashbackOn(String flashbackOn) {
+	public void setFlashbackOn(Boolean flashbackOn) {
 		this.flashbackOn = flashbackOn;
 	}
 
+	public Date getStartupTime() {
+		return startupTime;
+	}
+
+	public void setStartupTime(Date startupTime) {
+		this.startupTime = startupTime;
+	}
+
+	public String getHostName() {
+		return hostName;
+	}
+
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public String getBanner() {
+		return banner;
+	}
+
+	public void setBanner(String banner) {
+		this.banner = banner;
+	}
+
+	public Boolean getLoginsAllowed() {
+		return loginsAllowed;
+	}
+
+	public void setLoginsAllowed(Boolean loginsAllowed) {
+		this.loginsAllowed = loginsAllowed;
+	}
+
+	public Boolean getShutdownPending() {
+		return shutdownPending;
+	}
+
+	public void setShutdownPending(Boolean shutdownPending) {
+		this.shutdownPending = shutdownPending;
+	}
+	
 }

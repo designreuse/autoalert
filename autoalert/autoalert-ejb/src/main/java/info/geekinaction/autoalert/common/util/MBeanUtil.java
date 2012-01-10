@@ -14,6 +14,9 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
 /**
+ * 
+ * Utility class for handling MBeans (MXBeans to be more specific).
+ * 
  * @author lcsontos
  *
  */
@@ -26,10 +29,13 @@ public final class MBeanUtil {
 	 */
 	private MBeanUtil() { }
 	
+
 	/**
+	 * Constructs an ObjectName to the specified MBean interface.
 	 * 
-	 * @param clazz
-	 * @return
+	 * @param clazz Interface class of the MBean.
+	 * @return The ObjectName for the given MBean.
+	 * @throws JMException On error (eg. malformed ObjectName);
 	 */
 	public static ObjectName createObjectName(Class<?> clazz) throws JMException {
 		ObjectName objectName = ObjectName.getInstance(MBEAN_DOMAIN_NAME, "name", clazz.getName());
@@ -37,10 +43,11 @@ public final class MBeanUtil {
 	}
 	
 	/**
+	 * Creates a proxy object for the given MBean.
 	 * 
-	 * @param clazz
-	 * @return
-	 * @throws MalformedObjectNameException
+	 * @param clazzInterface class of the MBean.
+	 * @return Proxy for the specified MBean.
+	 * @throws JMException On error (eg. malformed ObjectName);
 	 */
 	public static <M> M getProxyForMBean(Class<M> clazz) throws JMException {
 		ObjectName objectName = createObjectName(clazz);
@@ -50,9 +57,13 @@ public final class MBeanUtil {
 	
 	/**
 	 * 
-	 * @param mbean
-	 * @param clazz
-	 * @throws JMException
+	 * Registers the given MBean into the JDK's Platform MBean server.
+	 * 
+	 * @param mbeanIface Interface class of the MBean.
+	 * @param mbeanImpl Implementation class of the MBean.
+	 * @return ObjectName of the registered MBean.
+	 * @throws JMException On registration error.
+	 * @throws InstantiationException, IllegalAccessException If the given MBean implementation cannot be instantiated.
 	 */
 	public static <I, M extends I> ObjectName registerMBean(Class<I> mbeanIface, Class<M> mbeanImpl) throws JMException, InstantiationException, IllegalAccessException {
 		ObjectName objectName = createObjectName(mbeanIface);
@@ -62,9 +73,10 @@ public final class MBeanUtil {
 	}
 	
 	/**
+	 * Removes the given MBean from the JDK's Platform MBean server.
 	 * 
-	 * @param objectName
-	 * @throws JMException
+	 * @param objectName ObjectName of the MBean to remove.
+	 * @throws JMException On error.
 	 */
 	public static void unregisterMBean(ObjectName objectName) throws JMException {
 		getPlatformMBeanServer().unregisterMBean(objectName);
@@ -72,7 +84,9 @@ public final class MBeanUtil {
 	
 	/**
 	 * 
-	 * @return
+	 * Returns a reference to the the JDK's Platform MBean server.
+	 * 
+	 * @return MBean server
 	 */
 	private static MBeanServer getPlatformMBeanServer() {
 		if (platformMBeanServer == null) {

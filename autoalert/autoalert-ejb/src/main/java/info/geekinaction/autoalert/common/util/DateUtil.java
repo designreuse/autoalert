@@ -8,8 +8,7 @@ import java.util.Date;
 
 /**
  * 
- * Utility class with static helper methods for
- * manipulating date/time data.
+ * Utility class with static helper methods for manipulating date/time data.
  * 
  * @author csontosbl
  * @version $LastChangedRevision: 1056 $

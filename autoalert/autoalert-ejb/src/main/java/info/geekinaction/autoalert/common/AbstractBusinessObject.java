@@ -29,10 +29,9 @@ public abstract class AbstractBusinessObject {
 	}
 
 	/**
-	 * Set the Session context for this EJB.
+	 * Set the Session context for this EJB mainly through dependency injection.
 	 * 
-	 * @param sessionContext
-	 *            Session context object.
+	 * @param sessionContext Session context object.
 	 */
 	protected abstract void setSessionContext(SessionContext sessionContext);
 
@@ -47,12 +46,12 @@ public abstract class AbstractBusinessObject {
 	}
 	
 	/**
-	 * 
+	 * Performs the initialization the current EJB instance.
 	 */
 	public abstract void init();
 	
 	/**
-	 * 
+	 * Destroys the current EJB instance.
 	 */
 	public abstract void destroy();
 

@@ -9,6 +9,7 @@ package info.geekinaction.autoalert.view;
  */
 public enum AutoAlertDisplay {
 
+	DATABASE_INFO,
 	INSTANCE_INFO,
 	INSTANCE_CPU,
 	INSTANCE_IO,

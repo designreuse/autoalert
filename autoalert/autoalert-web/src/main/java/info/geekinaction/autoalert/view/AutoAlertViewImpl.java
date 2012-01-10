@@ -6,6 +6,7 @@ package info.geekinaction.autoalert.view;
 import static info.geekinaction.autoalert.view.ViewConstants.HEIGHT;
 import static info.geekinaction.autoalert.view.ViewConstants.MESSAGES;
 import static info.geekinaction.autoalert.view.ViewConstants.WIDTH;
+import info.geekinaction.autoalert.model.domain.Database;
 import info.geekinaction.autoalert.model.domain.Datafile;
 import info.geekinaction.autoalert.model.domain.InstanceCpuUsage;
 import info.geekinaction.autoalert.model.domain.InstanceIoUsage;
@@ -14,6 +15,7 @@ import info.geekinaction.autoalert.model.domain.SessionIoUsage;
 import info.geekinaction.autoalert.model.domain.Tablespace;
 import info.geekinaction.autoalert.model.service.IAutoAlertModelAsync;
 import info.geekinaction.autoalert.view.ui.AutoAlertApp;
+import info.geekinaction.autoalert.view.ui.InstanceInfoPanel;
 import info.geekinaction.autoalert.view.ui.InstanceStatusPanel;
 import info.geekinaction.autoalert.view.ui.SessionStatusPanel;
 import info.geekinaction.autoalert.view.ui.StorageStatusPanel;
@@ -29,18 +31,19 @@ import com.google.gwt.user.client.ui.Widget;
  * @author lcsontos
  * 
  */
-public class AutoAlertViewImpl extends AbstractAutoAlertPanel implements IAutoAlertView, SelectionHandler<Integer> {
+public class AutoAlertViewImpl extends AbstractAutoAlertPanel<Object> implements IAutoAlertView, SelectionHandler<Integer> {
 
 	private IAutoAlertModelAsync model;
 	private IAutoAlertController controller;
 
 	private DecoratedTabPanel mainTabPanel;
 	
-	private AbstractAutoAlertPanel instanceStatusPanel;
-	private AbstractAutoAlertPanel storageStatusPanel;
-	private AbstractAutoAlertPanel sessionStatusPanel;
+	private InstanceInfoPanel instanceInfoPanel;
+	private InstanceStatusPanel instanceStatusPanel;
+	private StorageStatusPanel storageStatusPanel;
+	private SessionStatusPanel sessionStatusPanel;
 	
-	final boolean initializedViews[] = new boolean[3];
+	final boolean initializedViews[] = new boolean[4];
 	
 	/**
 	 * 
@@ -68,14 +71,17 @@ public class AutoAlertViewImpl extends AbstractAutoAlertPanel implements IAutoAl
 		mainTabPanel.setWidth(WIDTH);
 		mainTabPanel.setHeight(HEIGHT);
 
+		instanceInfoPanel = new InstanceInfoPanel();
 		instanceStatusPanel = new InstanceStatusPanel();
 		storageStatusPanel = new StorageStatusPanel();
 		sessionStatusPanel = new SessionStatusPanel();
 		
+		instanceInfoPanel.registerController(controller);
 		instanceStatusPanel.registerController(controller);
 		storageStatusPanel.registerController(controller);
 		sessionStatusPanel.registerController(controller);
 
+		mainTabPanel.add(instanceInfoPanel, "Instance info");
 		mainTabPanel.add(instanceStatusPanel, MESSAGES.instance());
 		mainTabPanel.add(storageStatusPanel, MESSAGES.storage());
 		mainTabPanel.add(sessionStatusPanel, MESSAGES.sessions());
@@ -94,9 +100,10 @@ public class AutoAlertViewImpl extends AbstractAutoAlertPanel implements IAutoAl
 		}
 		
 		switch (tabId) {
-			case 0: instanceStatusPanel.refresh(); break;
-			case 1:	storageStatusPanel.refresh(); break; 
-			case 2: sessionStatusPanel.refresh(); break;
+			case 0: instanceInfoPanel.refresh(); break; 
+			case 1: instanceStatusPanel.refresh(); break;
+			case 2:	storageStatusPanel.refresh(); break; 
+			case 3: sessionStatusPanel.refresh(); break;
 		}
 
 		initializedViews[tabId] = true;
@@ -105,13 +112,17 @@ public class AutoAlertViewImpl extends AbstractAutoAlertPanel implements IAutoAl
 	/**
 	 * 
 	 */
-	public void display(AutoAlertDisplay display, List<?> data) { }
+	public void display(AutoAlertDisplay display, Object data) { }
 
 	/**
 	 * 
 	 */
 	public void showDisplay(AutoAlertDisplay display, Object data) {
 		switch (display) {
+		case INSTANCE_INFO:
+			Database instance = (Database) data;
+			instanceInfoPanel.display(display, instance);
+			break;
 		case STORAGE_TABLESPACES:
 			List<Tablespace> tablespaces = (List<Tablespace>) data;
 			storageStatusPanel.display(display, tablespaces);
