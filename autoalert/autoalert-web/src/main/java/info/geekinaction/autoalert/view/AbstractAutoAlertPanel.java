@@ -3,24 +3,11 @@
  */
 package info.geekinaction.autoalert.view;
 
-import static info.geekinaction.autoalert.view.ViewConstants.HEIGHT;
-import static info.geekinaction.autoalert.view.ViewConstants.IMG_HEIGHT;
-import static info.geekinaction.autoalert.view.ViewConstants.IMG_URL_OK;
-import static info.geekinaction.autoalert.view.ViewConstants.IMG_URL_REFRESH;
-import static info.geekinaction.autoalert.view.ViewConstants.IMG_URL_WARNING;
-import static info.geekinaction.autoalert.view.ViewConstants.IMG_WIDTH;
-import static info.geekinaction.autoalert.view.ViewConstants.WIDTH;
-
-import info.geekinaction.autoalert.view.dt.DataTable;
-
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.ButtonBase;
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.LazyPanel;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.PushButton;
-import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -63,53 +50,12 @@ public abstract class AbstractAutoAlertPanel<D> extends LazyPanel implements IAu
 		}
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
-	protected ButtonBase createRefreshButton(ClickHandler clickHandler) {
-		ButtonBase button = new PushButton(new Image(IMG_URL_REFRESH), clickHandler);
-		button.setWidth(IMG_WIDTH);
-		button.setHeight(IMG_HEIGHT);
-		return button;
+	protected void showLoaderImage(boolean show) {
+		String id = this.getClass().getName();
+		Element imgLoaderElement = DOM.getElementById(id);
+		if (imgLoaderElement != null) {
+			UIObject.setVisible(imgLoaderElement, show);
+		}
 	}
 	
-	/**
-	 * 
-	 * @param alert
-	 * @return
-	 */
-	protected Image createAlertImage(int alert) {
-		return createAlertImage(alert > 0);
-	}
-
-	/**
-	 * 
-	 * @param alert
-	 * @return
-	 */
-	protected Image createAlertImage(boolean alert) {
-		Image image = alert ? new Image(IMG_URL_WARNING) : new Image(IMG_URL_OK);
-		return image;
-	}
-	
-	/**
-	 * 
-	 * @param widget
-	 * @return
-	 */
-	protected Panel createContainer(Widget widget, ClickHandler clickHandler) {
-		ScrollPanel sp = new ScrollPanel(widget);
-		sp.setHeight(HEIGHT);
-		sp.setWidth(WIDTH);
-		
-		ButtonBase btnRefresh = createRefreshButton(clickHandler);
-		
-		VerticalPanel vpTablespaces = new VerticalPanel();
-		vpTablespaces.setSpacing(10);
-		vpTablespaces.add(btnRefresh);
-		vpTablespaces.add(sp);
-		
-		return vpTablespaces;
-	}
 }

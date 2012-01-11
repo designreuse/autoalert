@@ -33,6 +33,7 @@ public class InstanceInfoPanel extends AbstractAutoAlertPanel<Database> {
 	 */
 	@Override
 	public void refresh() {
+		showLoaderImage(true);
 		controller.onInstanceInfoRefresh();
 	}
 
@@ -65,9 +66,9 @@ public class InstanceInfoPanel extends AbstractAutoAlertPanel<Database> {
 			
 		}
 		
-		Panel container = createContainer(ftInstanceInfo, new ClickHandler() {
+		Panel container = AutoAlertPanelUtil.createContainer(ftInstanceInfo, this.getClass().getName(), new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				controller.onInstanceInfoRefresh();
+				refresh();
 			}
 		});
 		
@@ -102,6 +103,7 @@ public class InstanceInfoPanel extends AbstractAutoAlertPanel<Database> {
 		}
 		
 		ftInstanceInfo.setVisible(true);
+		showLoaderImage(false);
 		
 	}
 

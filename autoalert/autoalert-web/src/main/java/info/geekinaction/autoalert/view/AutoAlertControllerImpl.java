@@ -3,6 +3,9 @@
  */
 package info.geekinaction.autoalert.view;
 
+import static info.geekinaction.autoalert.view.ViewConstants.*;
+import static info.geekinaction.autoalert.view.AutoAlertDisplay.*;
+
 import info.geekinaction.autoalert.model.domain.Database;
 import info.geekinaction.autoalert.model.domain.Datafile;
 import info.geekinaction.autoalert.model.domain.InstanceCpuUsage;
@@ -11,16 +14,20 @@ import info.geekinaction.autoalert.model.domain.SessionCpuUsage;
 import info.geekinaction.autoalert.model.domain.SessionIoUsage;
 import info.geekinaction.autoalert.model.domain.Tablespace;
 import info.geekinaction.autoalert.model.service.IAutoAlertModelAsync;
+import info.geekinaction.autoalert.view.ui.AutoAlertApp;
 
 import java.util.List;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * @author lcsontos
  * 
  */
-public class AutoAlertControllerImpl implements IAutoAlertController {
+public class AutoAlertControllerImpl implements IAutoAlertController  {
 
 	private IAutoAlertModelAsync model;
 	private IAutoAlertView view;
@@ -144,5 +151,31 @@ public class AutoAlertControllerImpl implements IAutoAlertController {
 		AsyncCallback<List<Tablespace>> callback = new AutoAlertControllerAsyncCallback<List<Tablespace>>(AutoAlertDisplay.STORAGE_TABLESPACES);
 		model.findTablespaces(false, callback);
 	}
+	
+	/**
+	 * 
+	 */
+	@Override
+	public void onClick(ClickEvent event) {
+		AutoAlertDisplay display = null;
+
+		// Sanity check.
+		Object src = event.getSource();
+		if (!(src instanceof ElementWrapperPanel)) {
+			return;
+		}
+		
+		// Decide with panel to show.
+		ElementWrapperPanel wrapper = (ElementWrapperPanel) src;
+		Element elem = wrapper.getElement();
+		String id = elem.getId();
+		
+		try {
+			view.display(AutoAlertDisplay.valueOf(id), elem.getInnerHTML());
+		} catch (Exception e) {
+			AutoAlertApp.showError(e);
+		}
+	}
+	
 
 }

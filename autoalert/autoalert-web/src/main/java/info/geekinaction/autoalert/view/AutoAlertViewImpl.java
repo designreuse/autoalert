@@ -3,9 +3,10 @@
  */
 package info.geekinaction.autoalert.view;
 
-import static info.geekinaction.autoalert.view.ViewConstants.HEIGHT;
-import static info.geekinaction.autoalert.view.ViewConstants.MESSAGES;
-import static info.geekinaction.autoalert.view.ViewConstants.WIDTH;
+import static info.geekinaction.autoalert.view.ViewConstants.APP_DIV_ID;
+import static info.geekinaction.autoalert.view.ViewConstants.SIDEBAR_ANCHOR_NAME;
+import static info.geekinaction.autoalert.view.ViewConstants.TITLE_DIV_ID;
+
 import info.geekinaction.autoalert.model.domain.Database;
 import info.geekinaction.autoalert.model.domain.Datafile;
 import info.geekinaction.autoalert.model.domain.InstanceCpuUsage;
@@ -14,36 +15,46 @@ import info.geekinaction.autoalert.model.domain.SessionCpuUsage;
 import info.geekinaction.autoalert.model.domain.SessionIoUsage;
 import info.geekinaction.autoalert.model.domain.Tablespace;
 import info.geekinaction.autoalert.model.service.IAutoAlertModelAsync;
+
 import info.geekinaction.autoalert.view.ui.AutoAlertApp;
+import info.geekinaction.autoalert.view.ui.DatafileStatusPanel;
+import info.geekinaction.autoalert.view.ui.InstanceCpuUsagePanel;
 import info.geekinaction.autoalert.view.ui.InstanceInfoPanel;
-import info.geekinaction.autoalert.view.ui.InstanceStatusPanel;
-import info.geekinaction.autoalert.view.ui.SessionStatusPanel;
-import info.geekinaction.autoalert.view.ui.StorageStatusPanel;
+import info.geekinaction.autoalert.view.ui.InstanceIoUsagePanel;
+import info.geekinaction.autoalert.view.ui.SessionCpuUsagePanel;
+import info.geekinaction.autoalert.view.ui.SessionIoUsagePanel;
+import info.geekinaction.autoalert.view.ui.TablespaceStatusPanel;
 
 import java.util.List;
 
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.user.client.ui.DecoratedTabPanel;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author lcsontos
  * 
  */
-public class AutoAlertViewImpl extends AbstractAutoAlertPanel<Object> implements IAutoAlertView, SelectionHandler<Integer> {
+public class AutoAlertViewImpl extends AbstractAutoAlertPanel<Object> implements IAutoAlertView {
 
 	private IAutoAlertModelAsync model;
 	private IAutoAlertController controller;
 
-	private DecoratedTabPanel mainTabPanel;
+	private HTML contentTitle;
+	private Panel contents;
+	private AbstractAutoAlertPanel<?> currentContent;
 	
 	private InstanceInfoPanel instanceInfoPanel;
-	private InstanceStatusPanel instanceStatusPanel;
-	private StorageStatusPanel storageStatusPanel;
-	private SessionStatusPanel sessionStatusPanel;
-	
-	final boolean initializedViews[] = new boolean[4];
+	private InstanceCpuUsagePanel instanceCpuUsagePanel;
+	private InstanceIoUsagePanel instanceIoUsagePanel;
+	private SessionCpuUsagePanel sessionCpuUsagePanel;
+	private SessionIoUsagePanel sessionIoUsagePanel;
+	private TablespaceStatusPanel tablespaceStatusPanel;
+	private DatafileStatusPanel datafileStatusPanel;
 	
 	/**
 	 * 
@@ -66,58 +77,67 @@ public class AutoAlertViewImpl extends AbstractAutoAlertPanel<Object> implements
 	@Override
 	protected Widget createWidget() {
 		
-		mainTabPanel = new DecoratedTabPanel();
-		mainTabPanel.setAnimationEnabled(true);
-		mainTabPanel.setWidth(WIDTH);
-		mainTabPanel.setHeight(HEIGHT);
-
 		instanceInfoPanel = new InstanceInfoPanel();
-		instanceStatusPanel = new InstanceStatusPanel();
-		storageStatusPanel = new StorageStatusPanel();
-		sessionStatusPanel = new SessionStatusPanel();
+		instanceCpuUsagePanel = new InstanceCpuUsagePanel();
+		instanceIoUsagePanel = new InstanceIoUsagePanel();
+		sessionCpuUsagePanel = new SessionCpuUsagePanel();
+		sessionIoUsagePanel = new SessionIoUsagePanel();
+		tablespaceStatusPanel = new TablespaceStatusPanel();
+		datafileStatusPanel = new DatafileStatusPanel();
 		
 		instanceInfoPanel.registerController(controller);
-		instanceStatusPanel.registerController(controller);
-		storageStatusPanel.registerController(controller);
-		sessionStatusPanel.registerController(controller);
-
-		mainTabPanel.add(instanceInfoPanel, "Instance info");
-		mainTabPanel.add(instanceStatusPanel, MESSAGES.instance());
-		mainTabPanel.add(storageStatusPanel, MESSAGES.storage());
-		mainTabPanel.add(sessionStatusPanel, MESSAGES.sessions());
-		mainTabPanel.addSelectionHandler(this);
-		mainTabPanel.selectTab(0);
-
-		return mainTabPanel;
+		instanceCpuUsagePanel.registerController(controller);
+		instanceIoUsagePanel.registerController(controller);
+		sessionCpuUsagePanel.registerController(controller);
+		sessionIoUsagePanel.registerController(controller);
+		tablespaceStatusPanel.registerController(controller);
+		datafileStatusPanel.registerController(controller);
+		
+		contentTitle = new HTML();
+		contents = new SimplePanel();
+		return contents;
 	}
 	
-	@Override
-	public void onSelection(SelectionEvent<Integer> event) {
-		
-		Integer tabId = event.getSelectedItem();
-		if (initializedViews[tabId]) {
-			return;
-		}
-		
-		switch (tabId) {
-			case 0: instanceInfoPanel.refresh(); break; 
-			case 1: instanceStatusPanel.refresh(); break;
-			case 2:	storageStatusPanel.refresh(); break; 
-			case 3: sessionStatusPanel.refresh(); break;
-		}
-
-		initializedViews[tabId] = true;
-	}
-
 	/**
 	 * 
 	 */
-	public void display(AutoAlertDisplay display, Object data) { }
+	public void display(AutoAlertDisplay display, Object title) {
+		
+		// Remove any contents if any.
+		if (currentContent != null) {
+			contents.remove(currentContent);
+		}
+		
+		// Set up new content.
+		switch (display) {
+			case INSTANCE_INFO:	currentContent = instanceInfoPanel; break;
+			case STORAGE_TABLESPACES: currentContent = tablespaceStatusPanel; break;
+			case STORAGE_DATAFILES: currentContent = datafileStatusPanel; break;
+			case INSTANCE_CPU: currentContent = instanceCpuUsagePanel; break;
+			case INSTANCE_IO: currentContent = instanceIoUsagePanel; break;
+			case SESSIONS_BY_CPU: currentContent = sessionCpuUsagePanel; break;
+			case SESSION_BY_IO: currentContent = sessionIoUsagePanel; break;
+		}
+		
+		// Change title if non-empty.
+		if (title != null) {
+			contentTitle.setHTML(title.toString());
+		}
+	
+		// Add to this view.
+		contents.add(currentContent);
+
+		// Refresh new view.
+		currentContent.setVisible(true);
+		currentContent.refresh();
+		
+	}
 
 	/**
 	 * 
 	 */
 	public void showDisplay(AutoAlertDisplay display, Object data) {
+		
 		switch (display) {
 		case INSTANCE_INFO:
 			Database instance = (Database) data;
@@ -125,27 +145,27 @@ public class AutoAlertViewImpl extends AbstractAutoAlertPanel<Object> implements
 			break;
 		case STORAGE_TABLESPACES:
 			List<Tablespace> tablespaces = (List<Tablespace>) data;
-			storageStatusPanel.display(display, tablespaces);
+			tablespaceStatusPanel.display(display, tablespaces);
 			break;
 		case STORAGE_DATAFILES:
 			List<Datafile> datafiles = (List<Datafile>) data;
-			storageStatusPanel.display(display, datafiles);
+			datafileStatusPanel.display(display, datafiles);
 			break;
 		case INSTANCE_CPU:
 			List<InstanceCpuUsage> instanceCpuUsages = (List<InstanceCpuUsage>) data;
-			instanceStatusPanel.display(display, instanceCpuUsages);
+			instanceCpuUsagePanel.display(display, instanceCpuUsages);
 			break;
 		case INSTANCE_IO:
 			List<InstanceIoUsage> instanceIoUsages = (List<InstanceIoUsage>) data;
-			instanceStatusPanel.display(display, instanceIoUsages);
+			instanceIoUsagePanel.display(display, instanceIoUsages);
 			break;
 		case SESSIONS_BY_CPU:
 			List<SessionCpuUsage> sessionCpuUsages = (List<SessionCpuUsage>) data;
-			sessionStatusPanel.display(display, sessionCpuUsages);
+			sessionCpuUsagePanel.display(display, sessionCpuUsages);
 			break;
 		case SESSION_BY_IO:
 			List<SessionIoUsage> sessionIoUsages = (List<SessionIoUsage>) data;
-			sessionStatusPanel.display(display, sessionIoUsages);
+			sessionIoUsagePanel.display(display, sessionIoUsages);
 			break;
 		}
 
@@ -163,16 +183,47 @@ public class AutoAlertViewImpl extends AbstractAutoAlertPanel<Object> implements
 	 * 
 	 */
 	public void refresh() {
-		instanceStatusPanel.refresh();
-		storageStatusPanel.refresh();
-		sessionStatusPanel.refresh();
+		instanceInfoPanel.refresh();
+		instanceCpuUsagePanel.refresh();
+		instanceIoUsagePanel.refresh();
+		sessionCpuUsagePanel.refresh();
+		sessionIoUsagePanel.refresh();
+		tablespaceStatusPanel.refresh();
+		datafileStatusPanel.refresh();
 	}
 
 	/**
 	 * 
 	 */
 	public void init() {
+		
+		// Register click handlers for native anchors.
+		NodeList<Element> anchorList = getElementsByName(SIDEBAR_ANCHOR_NAME);
+		for(int index = 0; index < anchorList.getLength(); index++) {
+			Element elem = anchorList.getItem(index);
+			ElementWrapperPanel wrapper = new ElementWrapperPanel(elem);
+			wrapper.addClickHandler(controller);
+		}
+		
+		// Make this panel visible.
 		setVisible(true);
-	}
 
+		// Add composite widgets to root panels. 
+		RootPanel.get(APP_DIV_ID).add(this);
+		RootPanel.get(TITLE_DIV_ID).add(contentTitle);
+		
+	}
+	
+	/**
+	 * GWT unfortunately does not have a getElementsByName() method,
+	 * thus we must interface with native JavaScript directly.
+	 * 
+	 * @param name Name of the element to be found.
+	 * @return List of matching nodes.
+	 * 
+	 */
+	private native NodeList<Element> getElementsByName(String name) /*-{
+	    return $doc.getElementsByName(name);
+	}-*/;
+	
 }

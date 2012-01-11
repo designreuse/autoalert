@@ -183,6 +183,19 @@ public final class AutoAlertModelDelegate extends RemoteServiceServlet implement
 	}
 	
 	/**
+	 * Override checkPermutationStrongName() because Firefox 3 causes
+	 * "Blocked request without GWT permutation header (XSRF attack?)" occasionally.
+	 */
+	@Override
+	protected void checkPermutationStrongName() {
+		try {
+			super.checkPermutationStrongName();
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+		}
+	}
+	
+	/**
 	 * 
 	 * @param e
 	 */

@@ -3,11 +3,7 @@
  */
 package info.geekinaction.autoalert.view.ui;
 
-import static info.geekinaction.autoalert.view.ViewConstants.MAIN_DIV_ID;
-
-import java.util.Iterator;
-import java.util.Set;
-
+import static info.geekinaction.autoalert.view.ViewConstants.APP_DIV_ID;
 import info.geekinaction.autoalert.model.service.IAutoAlertModel;
 import info.geekinaction.autoalert.model.service.IAutoAlertModelAsync;
 import info.geekinaction.autoalert.security.IAutoAlertSecurity;
@@ -17,13 +13,24 @@ import info.geekinaction.autoalert.view.AutoAlertViewImpl;
 import info.geekinaction.autoalert.view.IAutoAlertController;
 import info.geekinaction.autoalert.view.IAutoAlertView;
 
+import java.util.Iterator;
+import java.util.Set;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
-import com.google.web.bindery.event.shared.UmbrellaException;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.UmbrellaException;
 
 /**
  * @author lcsontos
@@ -55,8 +62,6 @@ public final class AutoAlertApp implements EntryPoint {
 		
 		view.setActionListener(controller);
 		view.init();
-		
-		RootPanel.get(MAIN_DIV_ID).add((Widget) view);
 		
 	}
 	

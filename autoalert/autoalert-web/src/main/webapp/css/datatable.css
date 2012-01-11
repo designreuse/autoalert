@@ -1,28 +1,28 @@
 .DataTable {
-  border-width: 1px 0px 1px 1px;
-  border-style: solid;
-  border-color: #222222;
-  border-spacing: 0px;
+  border-width: 0px 0px 1px 1px;
+  border-style: none;
+  border-color: green;
+  border-spacing: 2px;
 }
 
 .DataTable-OddRow {
-  background-color: #777777;
+  background-color: #f7a25a;
 }
 
 .DataTable-EvenRow {
-  background-color:  #999999;
+  background-color:  #f7c69d;
 }
 
 
 .DataTable-FirstRow {
-  background-color: #222222; 
-  text-align: center;
+  background-color: #F7811D; 
+  color: #FCF2D9;
   font-weight: bold;
 }
 
 .DataTable-Cell {
   border-width: 1px 1px 0px 0px;
-  border-style: solid;
-  border-color: #222222;
-  padding: 3px;
+  border-style: none;
+  border-color: green;
+  padding: 5px;
 }

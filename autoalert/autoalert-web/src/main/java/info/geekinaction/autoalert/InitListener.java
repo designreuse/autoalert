@@ -10,6 +10,7 @@ import info.geekinaction.autoalert.jmx.IAutoAlertInstrumentation;
 import info.geekinaction.autoalert.jmx.IAutoAlertManagement;
 
 import javax.ejb.EJB;
+import javax.management.JMException;
 import javax.management.ObjectName;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -35,14 +36,29 @@ public final class InitListener implements ServletContextListener {
 	 */
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
+		
+		// Register instrumentation MBean.
 		try {
 			autoAlertInstrumentationObjectName = MBeanUtil.registerMBean(IAutoAlertInstrumentation.class, AutoAlertInstrumentationImpl.class);
-			autoAlertManagementObjectName = MBeanUtil.registerMBean(IAutoAlertManagement.class, AutoAlertManagementImpl.class);
-			autoAlertManagement.startScheduler();
-			logger.info("Context initialized.");
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
+
+		// Register management MBean.
+		try {
+			autoAlertManagementObjectName = MBeanUtil.registerMBean(IAutoAlertManagement.class, AutoAlertManagementImpl.class);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		
+		// Start EJB timer.
+		try {
+			autoAlertManagement.startScheduler();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		logger.info("Context initialized.");
 	}
 	
 	/**
@@ -50,13 +66,22 @@ public final class InitListener implements ServletContextListener {
 	 */
 	@Override
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
+
+		// Unregister instrumentation MBean.
 		try {
 			MBeanUtil.unregisterMBean(autoAlertInstrumentationObjectName);
-			MBeanUtil.unregisterMBean(autoAlertManagementObjectName);
-			logger.info("Context destroyed.");
-		} catch (Exception e) {
+		} catch (JMException e) {
 			logger.error(e.getMessage(), e);
 		}
+		
+		// Unregister management MBean.
+		try {
+			MBeanUtil.unregisterMBean(autoAlertManagementObjectName);
+		} catch (JMException e) {
+			logger.error(e.getMessage(), e);
+		}
+		
+		logger.info("Context destroyed.");
 	}
 	
 }

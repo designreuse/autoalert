@@ -10,6 +10,7 @@ import static info.geekinaction.autoalert.view.ViewConstants.CSS_TABLE_FIRST_ROW
 import static info.geekinaction.autoalert.view.ViewConstants.CSS_TABLE_ODD_ROW;
 
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -84,6 +85,11 @@ public class DataTable<E> extends FlexTable {
 			getRowFormatter().addStyleName(row, styleName);
 			
 			for (int column = 0; column < columnNum; column++) {
+				
+				// Set alignment for the first row.
+				if (row < 1) {
+					getCellFormatter().setHorizontalAlignment(row, column, HasHorizontalAlignment.ALIGN_CENTER);
+				}
 				
 				// Apply CSS to an individual cell. 
 				getCellFormatter().addStyleName(row, column, CSS_TABLE_CELL);

@@ -4,7 +4,7 @@
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
 	<appender name="LOGFILE" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="file" value="${glassfish.home}/domains/${glassfish.domain}/logs/autoalert-web.log" />
+		<param name="file" value="${glassfish.home}/domains/${glassfish.domain}/logs/autoalert.log" />
 		<param name="append" value="true" />
 		<param name="datePattern" value="'.'yyyy-MM-dd" />
 		<layout class="org.apache.log4j.PatternLayout">

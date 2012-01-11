@@ -17,6 +17,11 @@ public interface IAutoAlertView {
 	
 	/**
 	 * 
+	 */
+	public void display(AutoAlertDisplay display, Object data);
+	
+	/**
+	 * 
 	 * @param obj
 	 */
 	public void showDisplay(AutoAlertDisplay display, Object data);

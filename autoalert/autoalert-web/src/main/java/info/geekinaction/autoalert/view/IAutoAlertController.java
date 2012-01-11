@@ -3,11 +3,13 @@
  */
 package info.geekinaction.autoalert.view;
 
+import com.google.gwt.event.dom.client.ClickHandler;
+
 /**
  * @author lcsontos
  *
  */
-public interface IAutoAlertController {
+public interface IAutoAlertController extends ClickHandler {
 
 	////////////////////////////////////////////////////////////////
 	// Login / Logout
