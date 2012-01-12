@@ -5,7 +5,7 @@ package info.geekinaction.autoalert.view;
 
 import static info.geekinaction.autoalert.view.ViewConstants.APP_DIV_ID;
 import static info.geekinaction.autoalert.view.ViewConstants.SIDEBAR_ANCHOR_NAME;
-import static info.geekinaction.autoalert.view.ViewConstants.TITLE_DIV_ID;
+import static info.geekinaction.autoalert.view.ViewConstants.*;
 
 import info.geekinaction.autoalert.model.domain.Database;
 import info.geekinaction.autoalert.model.domain.Datafile;
@@ -16,7 +16,6 @@ import info.geekinaction.autoalert.model.domain.SessionIoUsage;
 import info.geekinaction.autoalert.model.domain.Tablespace;
 import info.geekinaction.autoalert.model.service.IAutoAlertModelAsync;
 
-import info.geekinaction.autoalert.view.ui.AutoAlertApp;
 import info.geekinaction.autoalert.view.ui.DatafileStatusPanel;
 import info.geekinaction.autoalert.view.ui.InstanceCpuUsagePanel;
 import info.geekinaction.autoalert.view.ui.InstanceInfoPanel;
@@ -36,6 +35,9 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * 
+ * Implementation of main view.
+ * 
  * @author lcsontos
  * 
  */
@@ -65,7 +67,7 @@ public class AutoAlertViewImpl extends AbstractAutoAlertPanel<Object> implements
 	}
 
 	/**
-	 * 
+	 * @see IAutoAlertView#setActionListener(IAutoAlertController) 
 	 */
 	public void setActionListener(IAutoAlertController controller) {
 		this.controller = controller;
@@ -99,9 +101,9 @@ public class AutoAlertViewImpl extends AbstractAutoAlertPanel<Object> implements
 	}
 	
 	/**
-	 * 
+	 * @see IAutoAlertView#selectDisplay(AutoAlertDisplay, Object)
 	 */
-	public void display(AutoAlertDisplay display, Object title) {
+	public void selectDisplay(AutoAlertDisplay display, Object title) {
 		
 		// Remove any contents if any.
 		if (currentContent != null) {
@@ -134,9 +136,9 @@ public class AutoAlertViewImpl extends AbstractAutoAlertPanel<Object> implements
 	}
 
 	/**
-	 * 
+	 * @see IAutoAlertView#refreshDisplay(AutoAlertDisplay, Object)
 	 */
-	public void showDisplay(AutoAlertDisplay display, Object data) {
+	public void refreshDisplay(AutoAlertDisplay display, Object data) {
 		
 		switch (display) {
 		case INSTANCE_INFO:
@@ -172,15 +174,7 @@ public class AutoAlertViewImpl extends AbstractAutoAlertPanel<Object> implements
 	}
 
 	/**
-	 * 
-	 */
-	@Override
-	public void showError(Throwable t) {
-		AutoAlertApp.showError(t);
-	}
-
-	/**
-	 * 
+	 * @see IAutoAlertPanel#refresh()
 	 */
 	public void refresh() {
 		instanceInfoPanel.refresh();
@@ -193,7 +187,7 @@ public class AutoAlertViewImpl extends AbstractAutoAlertPanel<Object> implements
 	}
 
 	/**
-	 * 
+	 * @see IAutoAlertView#init()
 	 */
 	public void init() {
 		
@@ -211,6 +205,8 @@ public class AutoAlertViewImpl extends AbstractAutoAlertPanel<Object> implements
 		// Add composite widgets to root panels. 
 		RootPanel.get(APP_DIV_ID).add(this);
 		RootPanel.get(TITLE_DIV_ID).add(contentTitle);
+		
+		selectDisplay(AutoAlertDisplay.INSTANCE_INFO, MESSAGES.sidebarGeneralInfo());
 		
 	}
 	

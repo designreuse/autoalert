@@ -21,71 +21,59 @@ import java.util.Map;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
+ * 
+ * Asynchronous pair of IAutoAlertModel.
  * @author lcsontos
  * 
  */
 public interface IAutoAlertModelAsync {
 
 	/**
-	 * 
-	 * @param callback
+	 * @see IAutoAlertModel#findParameters()
 	 */
 	void findParameters(AsyncCallback<Map<ParameterName, Parameter>> callback);
 
 	/**
-	 * 
-	 * @param database
-	 * @param callback
+	 * @see IAutoAlertModel#findDatabase()
 	 */
 	void findDatabase(AsyncCallback<Database> callback);
 
 	/**
-	 * 
-	 * @param alertsOnly
-	 * @param callback
+	 * @see IAutoAlertModel#findInstanceCpuUsage(boolean)
 	 */
 	void findInstanceCpuUsage(boolean alertsOnly,
 			AsyncCallback<List<InstanceCpuUsage>> callback);
 
 	/**
-	 * 
-	 * @param alertsOnly
-	 * @param callback
+	 * @see IAutoAlertModel#findInstanceIoUsage(boolean)
 	 */
 	void findInstanceIoUsage(boolean alertsOnly,
 			AsyncCallback<List<InstanceIoUsage>> callback);
 
 	/**
-	 * 
-	 * @param alertsOnly
-	 * @param callback
+	 * @see IAutoAlertModel#findTablespaces(boolean)
 	 */
 	void findTablespaces(boolean alertsOnly,
 			AsyncCallback<List<Tablespace>> callback);
 
 	/**
-	 * 
-	 * @param alertsOnly
-	 * @param callback
+	 * @see IAutoAlertModel#findDatafiles(boolean)
 	 */
 	void findDatafiles(boolean alertsOnly,
 			AsyncCallback<List<Datafile>> callback);
 
 	/**
-	 * 
-	 * @param callback
+	 * @see IAutoAlertModel#findSession()
 	 */
 	void findSession(AsyncCallback<List<Session>> callback);
 
 	/**
-	 * 
-	 * @param callback
+	 * @see IAutoAlertModel#findSessionCpuUsage()
 	 */
 	void findSessionCpuUsage(AsyncCallback<List<SessionCpuUsage>> callback);
 
 	/**
-	 * 
-	 * @param callback
+	 * @see IAutoAlertModel#findSessionIoUsage()
 	 */
 	void findSessionIoUsage(AsyncCallback<List<SessionIoUsage>> callback);
 	

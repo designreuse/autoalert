@@ -1,7 +1,7 @@
 package info.geekinaction.autoalert.model.domain;
 
 /**
- * 
+ * Holds additional fields which are specific for tablespaces.
  * @author lcsontos
  * @since 1.0
  *

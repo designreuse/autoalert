@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>autoalert</artifactId>
 		<groupId>info.geekinaction</groupId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0.0-RELEASE</version>
 	</parent>
 
 	<artifactId>autoalert-ear</artifactId>

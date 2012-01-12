@@ -5,6 +5,9 @@ package info.geekinaction.autoalert.model.domain;
 
 
 /**
+ * 
+ * Base class of representing database session resource usage.
+ * 
  * @author lcsontos
  *
  */

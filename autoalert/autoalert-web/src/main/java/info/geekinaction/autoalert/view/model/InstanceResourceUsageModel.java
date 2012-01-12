@@ -1,20 +1,25 @@
 /**
  * 
  */
-package info.geekinaction.autoalert.view.ui;
+package info.geekinaction.autoalert.view.model;
 import static info.geekinaction.autoalert.view.FormatUtil.formatDate;
 import static info.geekinaction.autoalert.view.ViewConstants.MESSAGES;
 import info.geekinaction.autoalert.model.domain.AbstractInstanceResourceUsage;
+import info.geekinaction.autoalert.view.AutoAlertPanelUtil;
 import info.geekinaction.autoalert.view.dt.AbstractDataTableModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Table model for instance resource usage screens. 
+ * 
  * @author lcsontos
  *
  */
 public class InstanceResourceUsageModel<T extends AbstractInstanceResourceUsage> extends AbstractDataTableModel<T> {
+	
+	public InstanceResourceUsageModel() { }
 	
 	public InstanceResourceUsageModel(List<T> data) {
 		super(data);

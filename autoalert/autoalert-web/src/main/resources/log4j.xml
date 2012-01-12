@@ -19,7 +19,7 @@
 	</appender>
 
 	<root>
-		<priority value="INFO" />
+		<priority value="${log4j.level}" />
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="LOGFILE" />
 	</root>

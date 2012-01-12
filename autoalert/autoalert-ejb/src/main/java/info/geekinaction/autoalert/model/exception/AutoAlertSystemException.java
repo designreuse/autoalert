@@ -4,6 +4,9 @@
 package info.geekinaction.autoalert.model.exception;
 
 /**
+ * 
+ * General application exception which means some technical failure.
+ * 
  * @author lcsontos
  *
  */

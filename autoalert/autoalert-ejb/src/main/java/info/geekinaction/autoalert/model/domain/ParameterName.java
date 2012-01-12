@@ -4,6 +4,9 @@
 package info.geekinaction.autoalert.model.domain;
 
 /**
+ * 
+ * Represents all the available parameters of this system.
+ * 
  * @author lcsontos
  *
  */

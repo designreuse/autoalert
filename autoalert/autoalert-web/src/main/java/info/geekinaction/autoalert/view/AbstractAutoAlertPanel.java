@@ -11,8 +11,11 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * Base panel implementation of all other panels of this application.
+ * 
  * @author lcsontos
  *
+ * @param <D> Object type to display (eg. List<Tablespace>).
  */
 public abstract class AbstractAutoAlertPanel<D> extends LazyPanel implements IAutoAlertPanel<D> {
 
@@ -27,18 +30,11 @@ public abstract class AbstractAutoAlertPanel<D> extends LazyPanel implements IAu
 		setVisible(visible);
 	}
 
+	/**
+	 * Initializes contents of this
+	 */
 	protected abstract Widget createWidget();
 	
-	/**
-	 * 
-	 */
-	public Panel getPanel() {
-		return this;
-	}
-	
-	/**
-	 * 
-	 */
 	public void registerController(IAutoAlertController controller) {
 		this.controller = controller;
 	}

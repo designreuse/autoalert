@@ -4,7 +4,6 @@
 package info.geekinaction.autoalert.model.incident;
 
 import info.geekinaction.autoalert.common.util.DateUtil;
-import info.geekinaction.autoalert.model.domain.AbstractAlertable;
 import info.geekinaction.autoalert.model.domain.Database;
 import info.geekinaction.autoalert.model.domain.Datafile;
 import info.geekinaction.autoalert.model.domain.InstanceCpuUsage;
@@ -12,10 +11,7 @@ import info.geekinaction.autoalert.model.domain.InstanceIoUsage;
 import info.geekinaction.autoalert.model.domain.Tablespace;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -27,6 +23,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
+ * Represents a detected threshold violation and contains its details.
+ * 
  * @author lcsontos
  * 
  */
@@ -189,31 +187,6 @@ public class AutoAlertIncident implements Serializable {
 	 */
 	@XmlTransient
 	public int getCheckSum() {
-		
-		if (checkSum == 0) {
-			
-			List<AbstractAlertable> temp = new LinkedList<AbstractAlertable>();
-			temp.addAll(tablespaces);
-			temp.addAll(datafiles);
-			
-			if (cpuUsage != null) {
-				temp.add(cpuUsage);
-			}
-			
-			if (ioUsage != null) {
-				temp.add(ioUsage);
-			}
-			
-			Collections.sort(temp);
-
-			checkSum = 1;
-			for (Iterator iterator = temp.iterator(); iterator.hasNext();) {
-				Object obj = iterator.next();
-				checkSum = 31 * checkSum + (obj == null ? 0 : obj.hashCode());
-			}
-			
-		}
-		
 		return checkSum;
 	}
 	

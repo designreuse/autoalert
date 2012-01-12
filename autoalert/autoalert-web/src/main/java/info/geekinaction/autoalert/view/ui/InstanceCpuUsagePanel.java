@@ -3,67 +3,23 @@
  */
 package info.geekinaction.autoalert.view.ui;
 
-import info.geekinaction.autoalert.model.domain.AbstractInstanceResourceUsage;
 import info.geekinaction.autoalert.model.domain.InstanceCpuUsage;
-import info.geekinaction.autoalert.view.AbstractAutoAlertPanel;
+import info.geekinaction.autoalert.view.AbstractAutoAlertListPanel;
 import info.geekinaction.autoalert.view.AutoAlertDisplay;
-import info.geekinaction.autoalert.view.dt.DataTable;
-
-import java.util.List;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.Widget;
+import info.geekinaction.autoalert.view.model.InstanceResourceUsageModel;
 
 /**
  * @author lcsontos
  * 
  */
-public class InstanceCpuUsagePanel extends AbstractAutoAlertPanel<List<? extends AbstractInstanceResourceUsage>> {
+public class InstanceCpuUsagePanel extends AbstractAutoAlertListPanel<InstanceCpuUsage, InstanceResourceUsageModel<InstanceCpuUsage>> {
 
-	private DataTable<InstanceCpuUsage> dtInstanceCpuUsage;
+	public InstanceCpuUsagePanel() {
+		super(AutoAlertDisplay.INSTANCE_CPU, new InstanceResourceUsageModel<InstanceCpuUsage>());
+	}
 	
-	/**
-	 * 
-	 */
 	@Override
-	protected Widget createWidget() {
-		// Tablespaces
-		dtInstanceCpuUsage = new DataTable<InstanceCpuUsage>();
-		Panel vpInstanceCpuUsage = AutoAlertPanelUtil.createContainer(dtInstanceCpuUsage, this.getClass().getName(), new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				refresh();
-			}
-		});
-		
-		return vpInstanceCpuUsage;
-	}
-
-	/**
-	 * 
-	 */
-	@SuppressWarnings("unchecked")
-	public void display(AutoAlertDisplay display, List<? extends AbstractInstanceResourceUsage> obj) {
-		super.display(display, obj);
-
-		if (!AutoAlertDisplay.INSTANCE_CPU.equals(display)) {
-			return;
-		}
-		
-		List<InstanceCpuUsage> data1 = (List<InstanceCpuUsage>) obj;
-		InstanceResourceUsageModel<InstanceCpuUsage> model1 = new InstanceResourceUsageModel<InstanceCpuUsage>(data1);
-		dtInstanceCpuUsage.setModel(model1);
-		
-		showLoaderImage(false);
-		
-	}
-
-	/**
-	 * 
-	 */
-	public void refresh() {
-		showLoaderImage(true);
+	protected void controllerCallback() {
 		controller.onInstanceCpuUsageRefresh();
 	}
 	

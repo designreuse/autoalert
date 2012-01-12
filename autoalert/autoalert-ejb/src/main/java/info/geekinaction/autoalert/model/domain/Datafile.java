@@ -1,6 +1,7 @@
 package info.geekinaction.autoalert.model.domain;
 
 /**
+ * Holds additional fields which are specific for data files.
  * 
  * @author lcsontos
  *

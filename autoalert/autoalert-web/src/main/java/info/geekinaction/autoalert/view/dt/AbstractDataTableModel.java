@@ -9,20 +9,41 @@ import java.util.List;
 import java.util.Stack;
 
 /**
+ * 
+ * Base class of all datatable models.
+ * 
  * @author lcsontos
  * 
  */
 public abstract class AbstractDataTableModel<T> implements IDataTableModel<T> {
 
+	/**
+	 * Data of the model.
+	 */
 	protected List<T> data;
+	
+	/**
+	 * Titles of the corresponding data table.
+	 */
 	protected List<String> titles;
+	
+	/**
+	 * Cells of the data table
+	 */
 	protected List<List<Object>> cells;
+	
+	/**
+	 * Creates the model with no data.
+	 */
+	public AbstractDataTableModel() {
+		this(null);
+	}
 
 	/**
-	 * 
+	 * Creates the model with the specified data set.
 	 */
 	public AbstractDataTableModel(List<T> data) {
-		this.data = data;
+		this.data = (data == null) ? new ArrayList<T>() : data;
 		titles = new ArrayList<String>();
 		cells = new ArrayList<List<Object>>();
 		clear();
@@ -31,15 +52,14 @@ public abstract class AbstractDataTableModel<T> implements IDataTableModel<T> {
 	}
 
 	/**
-	 * @see info.geekinaction.autoalert.view.dt.IDataTableModel#addTitle(java.lang.String,
-	 *      java.lang.Integer[])
+	 * @see info.geekinaction.autoalert.view.dt.IDataTableModel#addTitle(java.lang.String, java.lang.Integer[])
 	 */
 	public void addTitle(String title) {
 		titles.add(title);
 	}
 	
 	/**
-	 * 
+	 * @see info.geekinaction.autoalert.view.dt.IDataTableModel#insertTitle(int, String)
 	 */
 	@Override
 	public void insertTitle(int index, String title) {
@@ -47,7 +67,7 @@ public abstract class AbstractDataTableModel<T> implements IDataTableModel<T> {
 	}
 
 	/**
-	 * 
+	 * @see info.geekinaction.autoalert.view.dt.IDataTableModel#removeTitle(String)
 	 */
 	public void removeTitle(String title) {
 		Stack<Integer> toRemove = new Stack<Integer>();
@@ -80,14 +100,14 @@ public abstract class AbstractDataTableModel<T> implements IDataTableModel<T> {
 	}
 
 	/**
-	 * 
+	 * @see info.geekinaction.autoalert.view.dt.IDataTableModel#getData()
 	 */
 	public List<T> getData() {
 		return data;
 	}
 
 	/**
-	 * 
+	 * @see info.geekinaction.autoalert.view.dt.IDataTableModel#setData(List)
 	 */
 	public void setData(List<T> obj) {
 		data = obj;
@@ -97,7 +117,7 @@ public abstract class AbstractDataTableModel<T> implements IDataTableModel<T> {
 	}
 
 	/**
-	 * 
+	 * Clears all data of this model.
 	 */
 	protected void clear() {
 		titles.clear();
@@ -110,31 +130,31 @@ public abstract class AbstractDataTableModel<T> implements IDataTableModel<T> {
 	}
 	
 	/**
-	 * 
+	 * Descendant classes must implement this method to populate model with appropriate titles.
 	 */
 	protected abstract void processTitles();
 	
 	/**
-	 * 
+	 * Descendant classes must implement this method to populate model's cells with data.
 	 */
 	protected abstract void processData();
 
 	/**
-	 * 
+	 * @see info.geekinaction.autoalert.view.dt.IDataTableModel#getRowNum()
 	 */
 	public int getRowNum() {
 		return cells.size() + 1;
 	}
 
 	/**
-	 * 
+	 * @see info.geekinaction.autoalert.view.dt.IDataTableModel#getColumnNum()
 	 */
 	public int getColumnNum() {
 		return titles.size();
 	}
 
 	/**
-	 * 
+	 * @see info.geekinaction.autoalert.view.dt.IDataTableModel#getObject(int, int)
 	 */
 	public Object getObject(int row, int column) {
 		if (row > 0) {

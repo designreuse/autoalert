@@ -31,19 +31,21 @@ import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.log.LogChute;
 
 /**
- * @author lcsontos
+ * Velocity logger implementation.
  * 
+ * @author lcsontos
+ * @see org.apache.velocity.runtime.log.LogChute
  */
-public class VelocityHelper implements LogChute {
+public class VelocityLogger implements LogChute {
 	
-	private static final Logger logger = Logger.getLogger(VelocityHelper.class);
+	private static final Logger logger = Logger.getLogger(VelocityLogger.class);
 
-	private static VelocityHelper me = null;
+	private static VelocityLogger me = null;
 	
 	/**
 	 * Initialize velocity framework.
 	 */
-	private VelocityHelper() {
+	private VelocityLogger() {
 		try {
 			// Load configuration
 			InputStream is = getClass().getResourceAsStream(VELOCITY_CONFIG_FILE);
@@ -132,9 +134,9 @@ public class VelocityHelper implements LogChute {
 	/**
 	 * Singleton initializator.
 	 */
-	public static VelocityHelper initVelocity() {
+	public static VelocityLogger initVelocity() {
 		if (me == null) {
-			me = new VelocityHelper();
+			me = new VelocityLogger();
 		}
 		return me;
 	}

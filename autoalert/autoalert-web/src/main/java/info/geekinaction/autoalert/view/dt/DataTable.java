@@ -14,13 +14,17 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * 
+ * Datatable implementation.
+ * 
  * @author lcsontos
  * 
  */
 public class DataTable<E> extends FlexTable {
-
-
 	
+	/**
+	 * Table model of this list.
+	 */
 	protected IDataTableModel<E> model;
 
 	/**
@@ -41,8 +45,7 @@ public class DataTable<E> extends FlexTable {
 	}
 
 	/**
-	 * 
-	 * @return
+	 *
 	 */
 	public IDataTableModel<E> getModel() {
 		return model;

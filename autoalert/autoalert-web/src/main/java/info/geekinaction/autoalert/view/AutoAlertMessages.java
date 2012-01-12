@@ -2,7 +2,7 @@ package info.geekinaction.autoalert.view;
 
 /**
  * Interface to represent the messages contained in resource bundle:
- * 	D:/SVN/AUTOALERT/trunk/autoalert/autoalert-web/src/main/java/info/geekinaction/autoalert/view/AutoAlertMessages.properties'.
+ * 	D:/SVN/AUTOALERT/trunk/autoalert/autoalert-web/src/main/resources/info/geekinaction/autoalert/view/AutoAlertMessages.properties'.
  */
 public interface AutoAlertMessages extends com.google.gwt.i18n.client.Messages {
   
@@ -23,6 +23,42 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Messages {
   @DefaultMessage("All")
   @Key("all")
   String all();
+
+  /**
+   * Translated "Created by Laszlo Csontos (2010 - 2012)".
+   * 
+   * @return translated "Created by Laszlo Csontos (2010 - 2012)"
+   */
+  @DefaultMessage("Created by Laszlo Csontos (2010 - 2012)")
+  @Key("applicationFooter")
+  String applicationFooter();
+
+  /**
+   * Translated "Auto Alert Application".
+   * 
+   * @return translated "Auto Alert Application"
+   */
+  @DefaultMessage("Auto Alert Application")
+  @Key("applicationName")
+  String applicationName();
+
+  /**
+   * Translated "Automatic Incident Detector for Oracle Databases".
+   * 
+   * @return translated "Automatic Incident Detector for Oracle Databases"
+   */
+  @DefaultMessage("Automatic Incident Detector for Oracle Databases")
+  @Key("applicationTitle")
+  String applicationTitle();
+
+  /**
+   * Translated "Banner".
+   * 
+   * @return translated "Banner"
+   */
+  @DefaultMessage("Banner")
+  @Key("banner")
+  String banner();
 
   /**
    * Translated "Begin time".
@@ -97,6 +133,15 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Messages {
   String datafiles();
 
   /**
+   * Translated "Date created".
+   * 
+   * @return translated "Date created"
+   */
+  @DefaultMessage("Date created")
+  @Key("dateCreated")
+  String dateCreated();
+
+  /**
    * Translated "End time".
    * 
    * @return translated "End time"
@@ -104,6 +149,15 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Messages {
   @DefaultMessage("End time")
   @Key("endTime")
   String endTime();
+
+  /**
+   * Translated "Flashback on".
+   * 
+   * @return translated "Flashback on"
+   */
+  @DefaultMessage("Flashback on")
+  @Key("flashbackOn")
+  String flashbackOn();
 
   /**
    * Translated "Free [MB]".
@@ -133,6 +187,15 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Messages {
   String instance();
 
   /**
+   * Translated "Instance name".
+   * 
+   * @return translated "Instance name"
+   */
+  @DefaultMessage("Instance name")
+  @Key("instanceName")
+  String instanceName();
+
+  /**
    * Translated "I/O".
    * 
    * @return translated "I/O"
@@ -160,6 +223,24 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Messages {
   String ioUsagehistory();
 
   /**
+   * Translated "Log mode".
+   * 
+   * @return translated "Log mode"
+   */
+  @DefaultMessage("Log mode")
+  @Key("logMode")
+  String logMode();
+
+  /**
+   * Translated "Logins allowed".
+   * 
+   * @return translated "Logins allowed"
+   */
+  @DefaultMessage("Logins allowed")
+  @Key("loginsAllowed")
+  String loginsAllowed();
+
+  /**
    * Translated "Logon time".
    * 
    * @return translated "Logon time"
@@ -167,6 +248,15 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Messages {
   @DefaultMessage("Logon time")
   @Key("logonTime")
   String logonTime();
+
+  /**
+   * Translated "Close your browser please to complete logout.".
+   * 
+   * @return translated "Close your browser please to complete logout."
+   */
+  @DefaultMessage("Close your browser please to complete logout.")
+  @Key("logout")
+  String logout();
 
   /**
    * Translated "Machine".
@@ -187,6 +277,24 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Messages {
   String module();
 
   /**
+   * Translated "No".
+   * 
+   * @return translated "No"
+   */
+  @DefaultMessage("No")
+  @Key("no")
+  String no();
+
+  /**
+   * Translated "Open mode".
+   * 
+   * @return translated "Open mode"
+   */
+  @DefaultMessage("Open mode")
+  @Key("openMode")
+  String openMode();
+
+  /**
    * Translated "OS process ID".
    * 
    * @return translated "OS process ID"
@@ -194,6 +302,15 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Messages {
   @DefaultMessage("OS process ID")
   @Key("osProcessId")
   String osProcessId();
+
+  /**
+   * Translated "Platform name".
+   * 
+   * @return translated "Platform name"
+   */
+  @DefaultMessage("Platform name")
+  @Key("platformName")
+  String platformName();
 
   /**
    * Translated "Program".
@@ -212,6 +329,15 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Messages {
   @DefaultMessage("Refresh")
   @Key("refresh")
   String refresh();
+
+  /**
+   * Translated "Resetlogs time".
+   * 
+   * @return translated "Resetlogs time"
+   */
+  @DefaultMessage("Resetlogs time")
+  @Key("resetlogsTime")
+  String resetlogsTime();
 
   /**
    * Translated "Serial".
@@ -239,6 +365,114 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Messages {
   @DefaultMessage("Session")
   @Key("sessions")
   String sessions();
+
+  /**
+   * Translated "Shutdown in progress".
+   * 
+   * @return translated "Shutdown in progress"
+   */
+  @DefaultMessage("Shutdown in progress")
+  @Key("shutdownInProgress")
+  String shutdownInProgress();
+
+  /**
+   * Translated "General".
+   * 
+   * @return translated "General"
+   */
+  @DefaultMessage("General")
+  @Key("sidebarGeneral")
+  String sidebarGeneral();
+
+  /**
+   * Translated "General instance information".
+   * 
+   * @return translated "General instance information"
+   */
+  @DefaultMessage("General instance information")
+  @Key("sidebarGeneralInfo")
+  String sidebarGeneralInfo();
+
+  /**
+   * Translated "CPU usage history".
+   * 
+   * @return translated "CPU usage history"
+   */
+  @DefaultMessage("CPU usage history")
+  @Key("sidebarInstanceCPUUsageHistory")
+  String sidebarInstanceCPUUsageHistory();
+
+  /**
+   * Translated "I/O usage history".
+   * 
+   * @return translated "I/O usage history"
+   */
+  @DefaultMessage("I/O usage history")
+  @Key("sidebarInstanceIOUsageHistory")
+  String sidebarInstanceIOUsageHistory();
+
+  /**
+   * Translated "Instance resource usage".
+   * 
+   * @return translated "Instance resource usage"
+   */
+  @DefaultMessage("Instance resource usage")
+  @Key("sidebarInstanceResourceUsage")
+  String sidebarInstanceResourceUsage();
+
+  /**
+   * Translated "Session resource usage".
+   * 
+   * @return translated "Session resource usage"
+   */
+  @DefaultMessage("Session resource usage")
+  @Key("sidebarSessionResourceUsage")
+  String sidebarSessionResourceUsage();
+
+  /**
+   * Translated "Top CPU consumers".
+   * 
+   * @return translated "Top CPU consumers"
+   */
+  @DefaultMessage("Top CPU consumers")
+  @Key("sidebarSessionTopCPU")
+  String sidebarSessionTopCPU();
+
+  /**
+   * Translated "Top I/O consumers".
+   * 
+   * @return translated "Top I/O consumers"
+   */
+  @DefaultMessage("Top I/O consumers")
+  @Key("sidebarSessionTopIO")
+  String sidebarSessionTopIO();
+
+  /**
+   * Translated "Data files".
+   * 
+   * @return translated "Data files"
+   */
+  @DefaultMessage("Data files")
+  @Key("sidebarStorageDatafiles")
+  String sidebarStorageDatafiles();
+
+  /**
+   * Translated "Storage status".
+   * 
+   * @return translated "Storage status"
+   */
+  @DefaultMessage("Storage status")
+  @Key("sidebarStorageStatus")
+  String sidebarStorageStatus();
+
+  /**
+   * Translated "Tablespaces".
+   * 
+   * @return translated "Tablespaces"
+   */
+  @DefaultMessage("Tablespaces")
+  @Key("sidebarStorageTablespaces")
+  String sidebarStorageTablespaces();
 
   /**
    * Translated "Max size [MB]".
@@ -275,6 +509,15 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Messages {
   @DefaultMessage("Size Remaining [%]")
   @Key("sizeRemainPer")
   String sizeRemainPer();
+
+  /**
+   * Translated "Startup time".
+   * 
+   * @return translated "Startup time"
+   */
+  @DefaultMessage("Startup time")
+  @Key("startupTime")
+  String startupTime();
 
   /**
    * Translated "Status".
@@ -347,4 +590,31 @@ public interface AutoAlertMessages extends com.google.gwt.i18n.client.Messages {
   @DefaultMessage("Username")
   @Key("username")
   String username();
+
+  /**
+   * Translated "Value".
+   * 
+   * @return translated "Value"
+   */
+  @DefaultMessage("Value")
+  @Key("value")
+  String value();
+
+  /**
+   * Translated "Version".
+   * 
+   * @return translated "Version"
+   */
+  @DefaultMessage("Version")
+  @Key("version")
+  String version();
+
+  /**
+   * Translated "Yes".
+   * 
+   * @return translated "Yes"
+   */
+  @DefaultMessage("Yes")
+  @Key("yes")
+  String yes();
 }

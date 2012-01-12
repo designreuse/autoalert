@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>info.geekinaction</groupId>
 	<artifactId>autoalert</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-RELEASE</version>
 	<packaging>pom</packaging>
 	<name>AutoAlert</name>
 
@@ -16,66 +16,53 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<glassfish.home>D:/devtools/Glassfish-3.0.1/glassfish</glassfish.home>
-		<glassfish.domain>domain2</glassfish.domain>
-		<domain.username>admin</domain.username>
 	</properties>
+	
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<glassfish.home>D:/devtools/Glassfish-3.0.1/glassfish</glassfish.home>
+				<glassfish.domain>domain2</glassfish.domain>
+				<domain.username>admin</domain.username>
+				<log4j.level>DEBUG</log4j.level>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<glassfish.home>/usr/lib/oracle/glassfish/3.0.1/glassfish</glassfish.home>
+				<glassfish.domain>autoalert-domain</glassfish.domain>
+				<domain.username>admin</domain.username>
+				<log4j.level>WARN</log4j.level>
+			</properties>
+		</profile>
+	</profiles>
 
 	<dependencyManagement>
 		<dependencies>
 
-			<!-- Define the version of the EJB jar so that we don't need to repeat 
-				ourselves in every module -->
+			<!-- Define the version of the EJB jar so that we don't need to repeat ourselves in every module -->
 			<dependency>
 				<groupId>info.geekinaction</groupId>
 				<artifactId>autoalert-ejb</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
+				<version>1.0.0-RELEASE</version>
 				<type>ejb</type>
 			</dependency>
 
-			<!-- Define the version of the WAR so that we don't need to repeat ourselves 
-				in every module -->
+			<!-- Define the version of the WAR so that we don't need to repeat ourselves in every module -->
 			<dependency>
 				<groupId>info.geekinaction</groupId>
 				<artifactId>autoalert-web</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
+				<version>1.0.0-RELEASE</version>
 				<type>war</type>
 				<scope>compile</scope>
-			</dependency>
-
-			<!-- Define the version of JBoss' Java EE 6 APIs we want to import. Any 
-				dependencies from org.jboss.spec will have their version defined by this 
-				BOM -->
-			<!-- JBoss distributes a complete set of Java EE 6 APIs including a Bill 
-				of Materials (BOM). A BOM specifies the versions of a "stack" (or a collection) 
-				of artifacts. We use this here so that we always get the correct versions 
-				of artifacts. Here we use the jboss-javaee-web-6.0 stack (you can read this 
-				as the JBoss stack of the Java EE Web Profile 6 APIs), and we use version 
-				2.0.0.Beta1 which is the latest release of the stack. You can actually use 
-				this stack with any version of JBoss AS that implements Java EE 6, not just 
-				JBoss AS 7! -->
-			<dependency>
-				<groupId>org.jboss.spec</groupId>
-				<artifactId>jboss-javaee-web-6.0</artifactId>
-				<version>2.0.0.Final</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-
-			<!-- JSR-303 (Bean Validation) Implementation -->
-			<!-- Provides portable constraints such as @Email -->
-			<!-- Hibernate Validator is shipped in JBoss AS 7 -->
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-validator</artifactId>
-				<version>4.1.0.Final</version>
-				<scope>provided</scope>
-				<exclusions>
-					<exclusion>
-						<groupId>org.slf4j</groupId>
-						<artifactId>slf4j-api</artifactId>
-					</exclusion>
-				</exclusions>
 			</dependency>
 
 			<!-- Test dependencies -->

@@ -4,6 +4,9 @@
 package info.geekinaction.autoalert.model.exception;
 
 /**
+ * 
+ * General application exception.
+ * 
  * @author lcsontos
  *
  */

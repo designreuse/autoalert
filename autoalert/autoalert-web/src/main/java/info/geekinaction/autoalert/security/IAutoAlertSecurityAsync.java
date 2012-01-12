@@ -3,10 +3,10 @@
  */
 package info.geekinaction.autoalert.security;
 
-/**
- * @author lcsontos
- *
- */
+/** NOT IMPLEMENTED YET.
+* 
+* RPC service for implemention server side login / logout.
+*/
 public interface IAutoAlertSecurityAsync {
 
 }

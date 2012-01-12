@@ -4,6 +4,7 @@
 package info.geekinaction.autoalert.model.domain;
 
 /**
+ * Place-holder class for session CPU usage.
  * @author lcsontos
  * @since 1.0
  *

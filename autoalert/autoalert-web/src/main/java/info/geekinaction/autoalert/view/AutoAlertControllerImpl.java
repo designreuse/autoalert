@@ -3,9 +3,6 @@
  */
 package info.geekinaction.autoalert.view;
 
-import static info.geekinaction.autoalert.view.ViewConstants.*;
-import static info.geekinaction.autoalert.view.AutoAlertDisplay.*;
-
 import info.geekinaction.autoalert.model.domain.Database;
 import info.geekinaction.autoalert.model.domain.Datafile;
 import info.geekinaction.autoalert.model.domain.InstanceCpuUsage;
@@ -14,16 +11,17 @@ import info.geekinaction.autoalert.model.domain.SessionCpuUsage;
 import info.geekinaction.autoalert.model.domain.SessionIoUsage;
 import info.geekinaction.autoalert.model.domain.Tablespace;
 import info.geekinaction.autoalert.model.service.IAutoAlertModelAsync;
-import info.geekinaction.autoalert.view.ui.AutoAlertApp;
 
 import java.util.List;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
+ * 
+ * Controller implementation.
+ * 
  * @author lcsontos
  * 
  */
@@ -53,14 +51,14 @@ public class AutoAlertControllerImpl implements IAutoAlertController  {
 		 * 
 		 */
 		public void onFailure(Throwable throwable) {
-			view.showError(throwable);
+			AutoAlertApp.showError(throwable);
 		}
 		
 		/**
 		 * 
 		 */
 		public void onSuccess(T data) {
-			view.showDisplay(display, data);
+			view.refreshDisplay(display, data);
 		}
 		
 	}
@@ -74,7 +72,7 @@ public class AutoAlertControllerImpl implements IAutoAlertController  {
 	}
 	
 	/**
-	 * 
+	 * @see IAutoAlertController#onLogin()
 	 */
 	public void onLogin() {
 		// TODO Auto-generated method stub
@@ -82,7 +80,7 @@ public class AutoAlertControllerImpl implements IAutoAlertController  {
 	}
 
 	/**
-	 * 
+	 * @see IAutoAlertController#onLogout()
 	 */
 	public void onLogout() {
 		// TODO Auto-generated method stub
@@ -90,7 +88,7 @@ public class AutoAlertControllerImpl implements IAutoAlertController  {
 	}
 
 	/**
-	 * 
+	 * @see IAutoAlertController#onInstanceCpuUsageRefresh()
 	 */
 	public void onInstanceCpuUsageRefresh() {
 		AsyncCallback<List<InstanceCpuUsage>> callback = new AutoAlertControllerAsyncCallback<List<InstanceCpuUsage>>(AutoAlertDisplay.INSTANCE_CPU);
@@ -98,7 +96,7 @@ public class AutoAlertControllerImpl implements IAutoAlertController  {
 	}
 
 	/**
-	 * 
+	 * @see IAutoAlertController#onInstanceInfoRefresh()
 	 */
 	public void onInstanceInfoRefresh() {
 		AsyncCallback<Database> callback = new AutoAlertControllerAsyncCallback<Database>(AutoAlertDisplay.INSTANCE_INFO);
@@ -106,7 +104,7 @@ public class AutoAlertControllerImpl implements IAutoAlertController  {
 	}
 
 	/**
-	 * 
+	 * @see IAutoAlertController#onInstanceIoUsageRefresh()
 	 */
 	public void onInstanceIoUsageRefresh() {
 		AsyncCallback<List<InstanceIoUsage>> callback = new AutoAlertControllerAsyncCallback<List<InstanceIoUsage>>(AutoAlertDisplay.INSTANCE_IO);
@@ -114,14 +112,14 @@ public class AutoAlertControllerImpl implements IAutoAlertController  {
 	}
 
 	/**
-	 * 
+	 * @see IAutoAlertController#onSessionAllRefresh()
 	 */
 	public void onSessionAllRefresh() {
 		// TODO Auto-generated method stub
 	}
 
 	/**
-	 * 
+	 * @see IAutoAlertController#onSessionByCpuRefresh()
 	 */
 	public void onSessionByCpuRefresh() {
 		AsyncCallback<List<SessionCpuUsage>> callback = new AutoAlertControllerAsyncCallback<List<SessionCpuUsage>>(AutoAlertDisplay.SESSIONS_BY_CPU);
@@ -129,7 +127,7 @@ public class AutoAlertControllerImpl implements IAutoAlertController  {
 	}
 
 	/**
-	 * 
+	 * @see IAutoAlertController#onSessionByIoRefresh()
 	 */
 	public void onSessionByIoRefresh() {
 		AsyncCallback<List<SessionIoUsage>> callback = new AutoAlertControllerAsyncCallback<List<SessionIoUsage>>(AutoAlertDisplay.SESSION_BY_IO);
@@ -137,7 +135,7 @@ public class AutoAlertControllerImpl implements IAutoAlertController  {
 	}
 
 	/**
-	 * 
+	 * @see IAutoAlertController#onStorageDatafilesRefresh()
 	 */
 	public void onStorageDatafilesRefresh() {
 		AsyncCallback<List<Datafile>> callback = new AutoAlertControllerAsyncCallback<List<Datafile>>(AutoAlertDisplay.STORAGE_DATAFILES);
@@ -145,7 +143,7 @@ public class AutoAlertControllerImpl implements IAutoAlertController  {
 	}
 
 	/**
-	 * 
+	 * @see IAutoAlertController#onStorageTablespacesRefresh()
 	 */
 	public void onStorageTablespacesRefresh() {
 		AsyncCallback<List<Tablespace>> callback = new AutoAlertControllerAsyncCallback<List<Tablespace>>(AutoAlertDisplay.STORAGE_TABLESPACES);
@@ -153,12 +151,12 @@ public class AutoAlertControllerImpl implements IAutoAlertController  {
 	}
 	
 	/**
-	 * 
+	 * Execute by the view when the user clicks on
+	 * one of the links on the sidebar.
 	 */
 	@Override
 	public void onClick(ClickEvent event) {
-		AutoAlertDisplay display = null;
-
+		
 		// Sanity check.
 		Object src = event.getSource();
 		if (!(src instanceof ElementWrapperPanel)) {
@@ -171,10 +169,11 @@ public class AutoAlertControllerImpl implements IAutoAlertController  {
 		String id = elem.getId();
 		
 		try {
-			view.display(AutoAlertDisplay.valueOf(id), elem.getInnerHTML());
+			view.selectDisplay(AutoAlertDisplay.valueOf(id), elem.getInnerHTML());
 		} catch (Exception e) {
 			AutoAlertApp.showError(e);
 		}
+		
 	}
 	
 

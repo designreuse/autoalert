@@ -1,7 +1,7 @@
 /**
  * 
  */
-package info.geekinaction.autoalert.view.ui;
+package info.geekinaction.autoalert.view;
 
 import static info.geekinaction.autoalert.view.ViewConstants.CSS_BUTTON;
 import static info.geekinaction.autoalert.view.ViewConstants.IMG_LOADER;
@@ -20,6 +20,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
+ * Utility class for panels.
+ * 
  * @author lcsontos
  *
  */
@@ -31,8 +33,9 @@ public final class AutoAlertPanelUtil {
 	private AutoAlertPanelUtil() { }
 	
 	/**
+	 * Creates a simple refresh button.
 	 * 
-	 * @return
+	 * @return A reference to the created button.
 	 */
 	public static ButtonBase createRefreshButton(ClickHandler clickHandler) {
 		ButtonBase button = new Button(MESSAGES.refresh(), clickHandler);
@@ -43,18 +46,17 @@ public final class AutoAlertPanelUtil {
 	}
 	
 	/**
+	 * Create an alert image.
 	 * 
-	 * @param alert
-	 * @return
+	 * @param alert Indicates whether the image should show an alert condition.
+	 * @return Create image.
 	 */
 	public static Image createAlertImage(int alert) {
 		return createAlertImage(alert > 0);
 	}
 
 	/**
-	 * 
-	 * @param alert
-	 * @return
+	 * @see AutoAlertPanelUtil#createAlertImage(int) 
 	 */
 	public static Image createAlertImage(boolean alert) {
 		Image image = alert ? new Image(IMG_URL_WARNING) : new Image(IMG_URL_OK);
@@ -62,9 +64,10 @@ public final class AutoAlertPanelUtil {
 	}
 	
 	/**
-	 * 
-	 * @param id
-	 * @return
+	 * Create AJAX "loading" image.
+	 *  
+	 * @param id DOM id of the image to be created.
+	 * @return The created image.
 	 */
 	public static Image createLoaderImage(String id) {
 		Image image = new Image(IMG_LOADER);
@@ -74,12 +77,13 @@ public final class AutoAlertPanelUtil {
 	}
 	
 	/**
-	 * 
-	 * @param widget
-	 * @return
+	 * Creates the inner container of the caller panel. 
+	 * @param widget Widget which shows data.
+	 * @return The created panel.
 	 */
 	public static Panel createContainer(Widget widget, String loaderId, ClickHandler clickHandler) {
 		
+		// Horizontal panel for the button and the AJAX loader image.
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		horizontalPanel.setSpacing(10);
 		
@@ -100,5 +104,4 @@ public final class AutoAlertPanelUtil {
 		return container;
 	}
 	
-
 }

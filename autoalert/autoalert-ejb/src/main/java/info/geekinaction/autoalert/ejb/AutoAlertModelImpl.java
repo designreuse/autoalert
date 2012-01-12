@@ -35,7 +35,7 @@ import info.geekinaction.autoalert.common.util.DateUtil;
 import info.geekinaction.autoalert.common.util.LogUtil;
 import info.geekinaction.autoalert.common.util.MailUtil;
 import info.geekinaction.autoalert.jmx.IAutoAlertManagement;
-import info.geekinaction.autoalert.mail.VelocityHelper;
+import info.geekinaction.autoalert.mail.VelocityLogger;
 import info.geekinaction.autoalert.model.domain.Database;
 import info.geekinaction.autoalert.model.domain.Datafile;
 import info.geekinaction.autoalert.model.domain.InstanceCpuUsage;
@@ -96,6 +96,8 @@ import org.apache.log4j.Logger;
 public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoAlertModel, IAutoAlertManagement, IAutoAlertIncidentHandler {
 	
 	private static final Logger logger = Logger.getLogger(AutoAlertModelImpl.class);
+	
+	private static final int SESSION_TOP_N = 10;
 
 	/**
 	 * Persistence context.
@@ -212,6 +214,8 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 	 */
 	public List<SessionCpuUsage> findSessionCpuUsage() {
 		Query query = createQuery(FIND_SESSION_CPU_USAGE);
+		query.setFirstResult(0);
+		query.setMaxResults(SESSION_TOP_N);
 		List<SessionCpuUsage> retval = (List<SessionCpuUsage>) query.getResultList();
 		return retval;
 	}
@@ -221,6 +225,8 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 	 */
 	public List<SessionIoUsage> findSessionIoUsage() {
 		Query query = createQuery(FIND_SESSION_IO_USAGE);
+		query.setFirstResult(0);
+		query.setMaxResults(SESSION_TOP_N);
 		List<SessionIoUsage> retval = (List<SessionIoUsage>) query.getResultList();
 		return retval;
 	}
@@ -491,7 +497,7 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 		try {
 			// Log next timeout
 			Date next = timer.getNextTimeout();
-			LogUtil.log(this, Level.INFO, "timerHandle(): Timer {1} next expiration will be: {0}.", new Object[] { TIMER_NAME, DateUtil.toChar(next, ISO_TIMESTAMP_FORMAT) });
+			LogUtil.log(this, Level.DEBUG, "timerHandle(): Timer {1} next expiration will be: {0}.", new Object[] { TIMER_NAME, DateUtil.toChar(next, ISO_TIMESTAMP_FORMAT) });
 
 			//////////////////////
 			// Check for alerts.
@@ -520,7 +526,7 @@ public class AutoAlertModelImpl extends AbstractBusinessObject implements IAutoA
 				if (!similarIncidentExists) {
 					
 					// Message body
-					String message = VelocityHelper.initVelocity().createMessage(autoAlertIncident);
+					String message = VelocityLogger.initVelocity().createMessage(autoAlertIncident);
 
 					// Get sender, recipients and subject
 					Map<ParameterName, Parameter> parameters = findParameters();

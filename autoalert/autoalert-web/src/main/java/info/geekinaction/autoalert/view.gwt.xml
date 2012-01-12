@@ -4,6 +4,7 @@
 
 	<!-- Import built-in modules -->
 	<inherits name="com.google.gwt.user.User" />
+
 	<!-- 
 	<inherits name='com.google.gwt.user.theme.standard.Standard' />
 	<inherits name="com.google.gwt.user.theme.dark.Dark" />
@@ -22,6 +23,6 @@
 	<set-configuration-property name="compiler.emulatedStack.recordFileNames" value="true" />
 
 	<!-- Define entry point of the application -->
-	<entry-point class="info.geekinaction.autoalert.view.ui.AutoAlertApp"></entry-point>
+	<entry-point class="info.geekinaction.autoalert.view.AutoAlertApp"></entry-point>
 	
 </module>

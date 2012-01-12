@@ -4,6 +4,8 @@
 package info.geekinaction.autoalert.view;
 
 /**
+ * Enumerates the different displays.
+ * 
  * @author lcsontos
  *
  */

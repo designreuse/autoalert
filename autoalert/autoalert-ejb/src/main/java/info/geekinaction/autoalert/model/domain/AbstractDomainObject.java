@@ -6,6 +6,10 @@ package info.geekinaction.autoalert.model.domain;
 import java.io.Serializable;
 
 /**
+ * Highest level base class of all domain objects.
+ * It represents an arbitrary domain object with a key type K and
+ * implements lazy hashCode() computation for the given K key.
+ * 
  * @author lcsontos
  *
  */

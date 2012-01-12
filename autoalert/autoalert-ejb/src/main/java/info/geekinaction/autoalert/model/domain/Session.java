@@ -2,6 +2,8 @@ package info.geekinaction.autoalert.model.domain;
 
 /**
  * 
+ * Concrete class for representing a database session.
+ * 
  * @author lcsontos
  * @since 1.0
  */

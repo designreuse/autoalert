@@ -3,6 +3,7 @@ package info.geekinaction.autoalert.model.domain;
 import java.util.Date;
 
 /**
+ * Base class of database instance resource usage.
  * 
  * @author lcsontos
  * 

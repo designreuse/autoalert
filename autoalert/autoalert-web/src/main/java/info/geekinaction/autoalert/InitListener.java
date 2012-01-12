@@ -18,6 +18,10 @@ import javax.servlet.ServletContextListener;
 import org.apache.log4j.Logger;
 
 /**
+ * 
+ * Application initializer: takes care of initializing various part
+ * of this application on startup and performs cleanup of shutdown.
+ * 
  * @author lcsontos
  * 
  */

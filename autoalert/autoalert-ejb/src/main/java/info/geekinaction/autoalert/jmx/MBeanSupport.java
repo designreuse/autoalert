@@ -3,19 +3,26 @@
  */
 package info.geekinaction.autoalert.jmx;
 
+import info.geekinaction.autoalert.common.util.LogUtil;
+
 import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
+ * 
+ * Base class of all MBeans, which implements common life-cycle callback methods.
+ * 
  * @author lcsontos
  *
  */
 public class MBeanSupport implements MBeanRegistration {
 	
 	private static final Logger logger = Logger.getLogger(MBeanSupport.class);
+	private static final String MESSAGE = "MBean {0} {1} has {2}.";
 	
 	protected enum RegistrationStatus {
 		STARTED, FINISHED, FAILED;
@@ -29,7 +36,8 @@ public class MBeanSupport implements MBeanRegistration {
 	 */
 	@Override
 	public ObjectName preRegister(MBeanServer server, ObjectName name) throws Exception {
-		logger.info(buildMessage(name, true, RegistrationStatus.STARTED));
+		Object[] params = buildMessageParams(name, true, RegistrationStatus.STARTED);
+		LogUtil.log(logger, Level.INFO, MESSAGE, null, params);
 		this.name = name;
 		return name;
 	}
@@ -39,7 +47,8 @@ public class MBeanSupport implements MBeanRegistration {
 	 */
 	@Override
 	public void postRegister(Boolean registrationDone) {
-		logger.info(buildMessage(name, true, registrationDone ? RegistrationStatus.FINISHED : RegistrationStatus.FAILED));
+		Object[] params = buildMessageParams(name, true, registrationDone ? RegistrationStatus.FINISHED : RegistrationStatus.FAILED);
+		LogUtil.log(logger, Level.INFO, MESSAGE, null, params);
 	}
 
 	/**
@@ -47,7 +56,8 @@ public class MBeanSupport implements MBeanRegistration {
 	 */
 	@Override
 	public void preDeregister() throws Exception {
-		logger.info(buildMessage(name, false, RegistrationStatus.STARTED));
+		Object[] params = buildMessageParams(name, false, RegistrationStatus.STARTED);
+		LogUtil.log(logger, Level.INFO, MESSAGE, null, params);
 	}
 
 	/**
@@ -55,31 +65,26 @@ public class MBeanSupport implements MBeanRegistration {
 	 */
 	@Override
 	public void postDeregister() {
-		logger.info(buildMessage(name, false, RegistrationStatus.FINISHED));
+		Object[] params = buildMessageParams(name, false, RegistrationStatus.FINISHED);
+		LogUtil.log(logger, Level.INFO, MESSAGE, null, params);
 	}
 	
 	/**
+	 * Builds message parameters
 	 * 
-	 * @param objectName
-	 * @param register
-	 * @param success
-	 * @return
+	 * @param objectName Object of MBean.
+	 * @param register True if the current action is registration.
+	 * @param success True if the current operation was successdul.
+	 * @return Parameters of the log message.
 	 */
-	protected String buildMessage(ObjectName objectName, boolean register, RegistrationStatus status) {
+	protected Object[] buildMessageParams(ObjectName objectName, boolean register, RegistrationStatus status) {
 		
 		assert objectName != null;
 		assert status != null;
 		
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("MBean ");
-		stringBuilder.append(objectName);
-		stringBuilder.append(' ');
-		stringBuilder.append(register ? "registration" : "deregistration");
-		stringBuilder.append(" has ");
-		stringBuilder.append(status.name().toLowerCase());
-		stringBuilder.append('.');
+		Object[] retval = new Object[] { objectName, register ? "registration" : "deregistration", status.name().toLowerCase() };
 		
-		return stringBuilder.toString();
+		return retval;
 	}
 
 }

@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>autoalert</artifactId>
 		<groupId>info.geekinaction</groupId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0.0-RELEASE</version>
 	</parent>
 
 	<artifactId>autoalert-web</artifactId>
@@ -23,37 +23,15 @@
 			<type>ejb</type>
 			<optional>true</optional>
 		</dependency>
-
-		<!-- Import the JAX-RS API, we use provided scope as the API is included 
-			in JBoss AS 7 -->
+		
+		<!-- Java EE 5 API -->
 		<dependency>
-			<groupId>org.jboss.spec.javax.ws.rs</groupId>
-			<artifactId>jboss-jaxrs-api_1.1_spec</artifactId>
+			<groupId>javaee</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>5</version>
 			<scope>provided</scope>
 		</dependency>
-
-		<!-- Import the CDI API, we use provided scope as the API is included in 
-			JBoss AS 7 -->
-		<dependency>
-			<groupId>javax.enterprise</groupId>
-			<artifactId>cdi-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<!-- Import the JPA API, we use provided scope as the API is included in 
-			JBoss AS 7 -->
-		<dependency>
-			<groupId>org.hibernate.javax.persistence</groupId>
-			<artifactId>hibernate-jpa-2.0-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jboss.spec.javax.ejb</groupId>
-			<artifactId>jboss-ejb-api_3.1_spec</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
+		
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>

@@ -10,6 +10,11 @@ import info.geekinaction.autoalert.security.IAutoAlertSecurity;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
+ * 
+ * NOT IMPLEMENTED YET.
+ * 
+ * RPC service for implemention server side login / logout.
+ * 
  * @author lcsontos
  *
  */

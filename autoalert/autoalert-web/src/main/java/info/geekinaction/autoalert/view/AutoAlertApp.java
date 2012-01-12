@@ -1,17 +1,12 @@
 /**
  * 
  */
-package info.geekinaction.autoalert.view.ui;
+package info.geekinaction.autoalert.view;
 
-import static info.geekinaction.autoalert.view.ViewConstants.APP_DIV_ID;
 import info.geekinaction.autoalert.model.service.IAutoAlertModel;
 import info.geekinaction.autoalert.model.service.IAutoAlertModelAsync;
 import info.geekinaction.autoalert.security.IAutoAlertSecurity;
 import info.geekinaction.autoalert.security.IAutoAlertSecurityAsync;
-import info.geekinaction.autoalert.view.AutoAlertControllerImpl;
-import info.geekinaction.autoalert.view.AutoAlertViewImpl;
-import info.geekinaction.autoalert.view.IAutoAlertController;
-import info.geekinaction.autoalert.view.IAutoAlertView;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -19,20 +14,13 @@ import java.util.Set;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.InputElement;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.UmbrellaException;
 
 /**
+ * 
+ * Entry point of this application
+ * 
  * @author lcsontos
  *
  */
@@ -41,7 +29,8 @@ public final class AutoAlertApp implements EntryPoint {
 	/**
 	 * 
 	 */
-	public AutoAlertApp() { 
+	public AutoAlertApp() {
+		// Register uncaught exception handler
 		GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 			public void onUncaughtException(Throwable e) {
 				showError(e);
@@ -54,22 +43,30 @@ public final class AutoAlertApp implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 		
+		// Instantiate async interfaces to RPC 
 		final IAutoAlertModelAsync model = GWT.create(IAutoAlertModel.class);
 		final IAutoAlertSecurityAsync securityAsync = GWT.create(IAutoAlertSecurity.class);
 		
+		// Create view
 		final IAutoAlertView view = new AutoAlertViewImpl(model);
+		
+		// Create controller
 		final IAutoAlertController controller = new AutoAlertControllerImpl(model, view);
 		
+		// Initialize view
 		view.setActionListener(controller);
 		view.init();
 		
 	}
 	
 	/**
+	 * Primitive implementation of showing client-side exceptions.
 	 * 
-	 * @param t
+	 * @param t Throwable object to show.
 	 */
 	public static void showError(Throwable t) {
+		// If T is an instance of UmbrellaException, show
+		// every exception which it contains.
 		if (t instanceof UmbrellaException) {
 			Set<Throwable> causes = ((UmbrellaException) t).getCauses();
 			for (Iterator<Throwable> iterator = causes.iterator(); iterator.hasNext();) {
@@ -78,6 +75,8 @@ public final class AutoAlertApp implements EntryPoint {
 			}
 			return;
 		}
+		
+		// Otherwise show the single exception given.
 		showError0(t);
 	}
 	

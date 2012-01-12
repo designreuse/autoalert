@@ -4,6 +4,9 @@
 package info.geekinaction.autoalert.model.domain;
 
 /**
+ * 
+ * Base class of representing database storage objects (ie. tablespaces and datafiles).
+ * 
  * @author lcsontos
  * 
  */

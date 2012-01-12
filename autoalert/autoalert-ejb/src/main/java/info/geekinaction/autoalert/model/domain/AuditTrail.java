@@ -6,6 +6,9 @@ package info.geekinaction.autoalert.model.domain;
 import java.util.Date;
 
 /**
+ * 
+ * Represents audit trail records.
+ * 
  * @author lcsontos
  *
  */

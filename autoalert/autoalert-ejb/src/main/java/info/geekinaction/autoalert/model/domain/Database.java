@@ -4,6 +4,8 @@ import java.util.Date;
 
 /**
  * 
+ * Hold various properties of a database instance.
+ * 
  * @author lcsontos
  * 
  */

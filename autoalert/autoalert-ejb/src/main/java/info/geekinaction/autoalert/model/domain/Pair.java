@@ -4,6 +4,9 @@
 package info.geekinaction.autoalert.model.domain;
 
 /**
+ * 
+ * General class for holding two arbitrary values.
+ * 
  * @author lcsontos
  *
  */

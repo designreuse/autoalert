@@ -1,7 +1,7 @@
 /**
  * 
  */
-package info.geekinaction.autoalert.view.ui;
+package info.geekinaction.autoalert.view.model;
 
 import static info.geekinaction.autoalert.view.FormatUtil.formatDate;
 import static info.geekinaction.autoalert.view.ViewConstants.MESSAGES;
@@ -12,11 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Table model for session resource usage screens.
+ *  
  * @author lcsontos
  *
  */
 public class SessionResourceUsageModel<T extends AbstractSessionResourceUsage> extends AbstractDataTableModel<T> {
 
+	public SessionResourceUsageModel() { }
+	
 	public SessionResourceUsageModel(List<T> data) {
 		super(data);
 	}

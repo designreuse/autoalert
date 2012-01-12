@@ -5,6 +5,9 @@ package info.geekinaction.autoalert.model.domain;
 
 
 /**
+ * 
+ * Place-holder class for instance CPU usage
+ * 
  * @author lcsontos
  *
  */

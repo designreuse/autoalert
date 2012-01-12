@@ -7,8 +7,9 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 /**
- * @author lcsontos
- *
+ * NOT IMPLEMENTED YET.
+ * 
+ * RPC service for implemention server side login / logout.
  */
 @RemoteServiceRelativePath("security")
 public interface IAutoAlertSecurity extends RemoteService {

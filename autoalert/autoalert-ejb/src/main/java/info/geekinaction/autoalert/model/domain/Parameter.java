@@ -3,6 +3,7 @@ package info.geekinaction.autoalert.model.domain;
 import java.util.Map;
 
 /**
+ * Contains the system wide parameters of this application.
  * 
  * @author lcsontos
  *
@@ -12,11 +13,8 @@ public class Parameter extends AbstractDomainObject<String> {
 	private static final long serialVersionUID = 1L;
 
 	private String paramDesc;
-
 	private String paramType;
-
 	private Integer paramNumValue;
-
 	private String paramVcharValue;
 
 	/**

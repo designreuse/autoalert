@@ -8,6 +8,7 @@ grant select on sys.v_$sysmetric_history to autoalert with grant option;
 grant select on sys.v_$sesstat to autoalert with grant option;
 grant select on sys.v_$statname to autoalert with grant option;
 grant select on sys.v_$database to autoalert with grant option;
+grant execute on sys.dbms_flashback to autoalert with grant option;
 
 grant select on autoalert.vw_aa_all_datafiles to autoalert_jdbc;
 grant select on autoalert.vw_aa_all_sessions to autoalert_jdbc;

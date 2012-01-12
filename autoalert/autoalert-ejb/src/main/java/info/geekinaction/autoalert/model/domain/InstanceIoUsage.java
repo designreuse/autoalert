@@ -4,6 +4,9 @@
 package info.geekinaction.autoalert.model.domain;
 
 /**
+ * 
+ * Place-holder class for instance I/O usage
+ * 
  * @author lcsontos
  *
  */

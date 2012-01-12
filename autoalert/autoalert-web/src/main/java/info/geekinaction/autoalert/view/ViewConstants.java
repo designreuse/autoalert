@@ -7,6 +7,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.NumberFormat;
 
 /**
+ * 
+ * Constants of views.
+ * 
  * @author lcsontos
  *
  */
@@ -40,12 +43,4 @@ public interface ViewConstants {
 	public static final String SIDEBAR_ANCHOR_NAME = "a_sidebar";
 	public static final String SIDEBAR_ANCHOR_GENERAL = "a_sidebarGeneral";
 	
-	/*
-	public static final String SIDEBAR_ANCHOR_INSTANCE_CPU_USAGE_HISTORY = "a_sidebarInstanceCPUUsageHistory";
-	public static final String SIDEBAR_ANCHOR_INSTANCE_IO_USAGE_HISTORY = "a_sidebarInstanceIOUsageHistory";
-	public static final String SIDEBAR_ANCHOR_SESSION_TOP_CPU = "a_sidebarSessionTopCPU";
-	public static final String SIDEBAR_ANCHOR_SESSION_TOP_IO = "a_sidebarSessionTopIO";
-	public static final String SIDEBAR_ANCHOR_STORAGE_TABLESPACES = "a_sidebarStorageTablespaces";
-	public static final String SIDEBAR_ANCHOR_STORAGE_DATAFILES = "a_sidebarStorageDatafiles";
-	*/
 }

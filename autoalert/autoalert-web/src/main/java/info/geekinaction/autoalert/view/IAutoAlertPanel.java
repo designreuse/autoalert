@@ -3,41 +3,32 @@
  */
 package info.geekinaction.autoalert.view;
 
-import com.google.gwt.user.client.ui.Panel;
-
 /**
- * @author lcsontos
+ * 
+ * Interface of panels
+ * 
+ * @param <T> Object type to display (eg. List<Tablespace>).
  *
  */
 public interface IAutoAlertPanel<T> {
 
 	/**
+	 * Register the specified controller to this panel.
 	 * 
-	 * @param controller
+	 * @param controller Application's controller.
 	 */
 	public void registerController(IAutoAlertController controller);
     
     /**
-     * 
-     * @param obj
+     * Show the given panel with the given display name within this panel.
+     * @param display Display to show.
+     * @param obj Object to display.
      */
 	public void display(AutoAlertDisplay display, T obj);
     
     /**
-     * 
+     * Refresh the contents of this panel.
      */
 	public void refresh();
-    
-    /**
-     * 
-     * @return
-     */
-	public Panel getPanel();
-    
-    /**
-     * 
-     * @return
-     */
-	// public AutoAlertMessages getMessages();
     
 }

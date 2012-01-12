@@ -7,6 +7,9 @@ package info.geekinaction.autoalert.model.domain;
 import java.util.Date;
 
 /**
+ * 
+ * Base class of representing database sessions.
+ * 
  * @author lcsontos
  * 
  */

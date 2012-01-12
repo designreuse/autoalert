@@ -29,6 +29,9 @@ import org.apache.log4j.Logger;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
+ * 
+ * Exposes business interface of the application as a GWT-RPC service.
+ * 
  * @author lcsontos
  * 
  */
@@ -42,7 +45,7 @@ public final class AutoAlertModelDelegate extends RemoteServiceServlet implement
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 
+	 * EJB Proxy
 	 */
 	@EJB(name = "AutoAlertModel")
 	private IAutoAlertModel model;
@@ -66,7 +69,7 @@ public final class AutoAlertModelDelegate extends RemoteServiceServlet implement
 	}
 
 	/**
-	 * 
+	 * @see IAutoAlertModel#findDatafiles(boolean)
 	 */
 	public List<Datafile> findDatafiles(boolean alertsOnly) throws AutoAlertException {
 		List<Datafile> retval = null;
@@ -79,7 +82,7 @@ public final class AutoAlertModelDelegate extends RemoteServiceServlet implement
 	}
 
 	/**
-	 * 
+	 * @see IAutoAlertModel#findTablespaces(boolean)
 	 */
 	public List<Tablespace> findTablespaces(boolean alertsOnly) throws AutoAlertException {
 		List<Tablespace> retval = null;
@@ -92,7 +95,7 @@ public final class AutoAlertModelDelegate extends RemoteServiceServlet implement
 	}
 
 	/**
-	 * 
+	 * @see IAutoAlertModel#findParameters()
 	 */
 	public Map<ParameterName, Parameter> findParameters() throws AutoAlertException {
 		Map<ParameterName, Parameter> retval = null;
@@ -196,8 +199,12 @@ public final class AutoAlertModelDelegate extends RemoteServiceServlet implement
 	}
 	
 	/**
+	 * Handles runtime errors which might occur during EJB calls.
+	 * Wraps the original exception as AutoAlertSystemException, because
+	 * the root cause of the exception (eg. SQLException) might not be
+	 * serializable for GWT. 
 	 * 
-	 * @param e
+	 * @param e Original exception.
 	 */
 	private void handleError(RuntimeException e) throws AutoAlertException {
 		AutoAlertSystemException systemException = null;
